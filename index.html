@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- html2pdf para geração de PDFs direto no navegador -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Adicionando Chart.js para Gráficos Profissionais -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
@@ -125,6 +127,12 @@
                     <button onclick="navigate('reunioes')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="reunioes">
                         <i class="fas fa-calendar-check w-5 text-center"></i> Reuniões
                     </button>
+                    <button onclick="navigate('notificacoes')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="notificacoes">
+                        <i class="fas fa-bell w-5 text-center"></i> Alertas da Gestão
+                    </button>
+                    <button onclick="navigate('mural')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="mural">
+                        <i class="fas fa-bullhorn w-5 text-center"></i> Mural de Avisos
+                    </button>
                 </div>
 
                 <!-- Menu: Direção -->
@@ -133,8 +141,11 @@
                     <button onclick="navigate('dir-dashboard')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="dir-dashboard">
                         <i class="fas fa-chart-pie w-5 text-center"></i> Visão Geral
                     </button>
+                    <button onclick="navigate('dir-conselho')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="dir-conselho">
+                        <i class="fas fa-users-cog w-5 text-center"></i> Conselho de Classe
+                    </button>
                     <button onclick="navigate('dir-alertas')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="dir-alertas">
-                        <i class="fas fa-bell w-5 text-center"></i> Alertas de Frequência
+                        <i class="fas fa-exclamation-triangle w-5 text-center"></i> Alertas de Frequência
                     </button>
                     <button onclick="navigate('shared-student-search')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="shared-student-search">
                         <i class="fas fa-search w-5 text-center"></i> Buscar Aluno
@@ -142,25 +153,35 @@
                     <button onclick="navigate('reunioes')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="reunioes">
                         <i class="fas fa-calendar-check w-5 text-center"></i> Reuniões
                     </button>
+                    <button onclick="navigate('mural')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="mural">
+                        <i class="fas fa-bullhorn w-5 text-center"></i> Mural de Avisos
+                    </button>
                 </div>
 
                 <!-- Menu: Multidisciplinar -->
                 <div class="menu-section only-multi mb-6">
                     <p class="text-xs uppercase text-gray-400 font-bold mb-2 px-2 tracking-wider">Atendimento Especializado</p>
+                    <button onclick="navigate('multi-encaminhamentos')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="multi-encaminhamentos">
+                        <i class="fas fa-clipboard-check w-5 text-center"></i> Fila de Atendimentos
+                        <span id="badge-encaminhamentos" class="hidden ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Novo</span>
+                    </button>
                     <button onclick="navigate('shared-student-search')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="shared-student-search">
                         <i class="fas fa-user-md w-5 text-center"></i> Buscar Paciente/Aluno
                     </button>
-                    <button onclick="navigate('multi-casos')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="multi-casos">
-                        <i class="fas fa-lock w-5 text-center"></i> Casos em Acompanhamento
-                    </button>
                     <button onclick="navigate('reunioes')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="reunioes">
                         <i class="fas fa-calendar-check w-5 text-center"></i> Agendar Reuniões
+                    </button>
+                    <button onclick="navigate('mural')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="mural">
+                        <i class="fas fa-bullhorn w-5 text-center"></i> Mural de Avisos
                     </button>
                 </div>
 
             </nav>
 
-            <div class="p-4 border-t border-[#004d5e] hidden md:block" id="sidebar-footer">
+            <div class="p-4 border-t border-[#004d5e] hidden md:flex flex-col gap-2" id="sidebar-footer">
+                <button onclick="toggleDarkMode()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#004d5e] hover:bg-[#003844] text-white rounded-lg transition text-sm font-bold shadow-sm border border-[#003844]">
+                    <i id="dark-mode-icon" class="fas fa-moon"></i> <span id="dark-mode-text">Modo Escuro</span>
+                </button>
                 <button id="logout-btn" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition text-sm font-bold shadow-md">
                     <i class="fas fa-power-off"></i> Encerrar Sessão
                 </button>
@@ -328,6 +349,22 @@
                     </div>
                 </div>
 
+                <!-- Gráficos Analíticos -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-sm font-bold text-gray-500 uppercase mb-4 tracking-wider">Média de Notas (Por Disciplina)</h3>
+                        <div class="relative h-64 w-full">
+                            <canvas id="chart-notas"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-sm font-bold text-gray-500 uppercase mb-4 tracking-wider">Status de Frequência Global</h3>
+                        <div class="relative h-64 w-full flex justify-center">
+                            <canvas id="chart-frequencia"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Equipe -->
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
@@ -383,10 +420,10 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800">Agenda de Reuniões</h2>
-                        <p class="text-gray-500 text-sm mt-1">Solicitações e agendamentos com as equipes da escola.</p>
+                        <p class="text-gray-500 text-sm mt-1">Gerencie suas convocações e agendamentos com as equipes. Acesso restrito aos envolvidos.</p>
                     </div>
                     <button onclick="document.getElementById('modal-reuniao').classList.remove('hidden')" class="bg-school-secondary text-white px-5 py-2.5 rounded-lg font-bold shadow hover:bg-[#087f82] transition flex items-center gap-2">
-                        <i class="fas fa-plus"></i> Agendar / Solicitar
+                        <i class="fas fa-plus"></i> Nova Convocação
                     </button>
                 </div>
 
@@ -394,6 +431,72 @@
                     <div id="reunioes-list" class="space-y-4">
                         <!-- Injetado via JS -->
                     </div>
+                </div>
+            </div>
+
+            <!-- VIEW: MURAL DE AVISOS -->
+            <div id="view-mural" class="app-section hidden p-6 md:p-8 max-w-5xl mx-auto fade-in">
+                <div class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Mural de Comunicados</h2>
+                        <p class="text-gray-500 text-sm mt-1">Avisos oficiais da gestão escolar para toda a equipe.</p>
+                    </div>
+                </div>
+
+                <!-- Formulário apenas para Direção -->
+                <div id="form-mural-container" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8 only-dir">
+                    <h3 class="font-bold text-gray-800 mb-4 border-b pb-2"><i class="fas fa-bullhorn text-school-primary mr-2"></i>Publicar Novo Aviso</h3>
+                    <form id="form-mural" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Título do Aviso</label>
+                                <input type="text" id="mural-titulo" required class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-secondary outline-none text-sm font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Prioridade</label>
+                                <select id="mural-prioridade" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-secondary outline-none text-sm font-medium">
+                                    <option value="normal">Normal (Informativo)</option>
+                                    <option value="alta">Alta (Urgente / Alerta)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mensagem</label>
+                            <textarea id="mural-mensagem" required rows="3" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-school-secondary resize-none text-sm"></textarea>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="bg-school-primary text-white px-6 py-2.5 rounded-lg font-bold shadow-sm transition hover:bg-[#004d5e]">Publicar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="mural-list" class="space-y-4">
+                    <!-- Injetado via JS -->
+                </div>
+            </div>
+
+            <!-- VIEW: NOTIFICAÇÕES (Professores) -->
+            <div id="view-notificacoes" class="app-section hidden p-6 md:p-8 max-w-4xl mx-auto fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Alertas da Gestão</h2>
+                    <p class="text-gray-500 text-sm mt-1">Cobranças e lembretes direcionados a você.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 min-h-[300px]">
+                    <div id="notificacoes-list" class="space-y-3">
+                        <!-- Injetado via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: COMUNICADOS GERAIS -->
+            <div id="view-comunicados" class="app-section hidden p-6 md:p-8 max-w-5xl mx-auto fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Mural de Avisos</h2>
+                    <p class="text-gray-500 text-sm mt-1">Comunicados oficiais da direção e coordenação.</p>
+                </div>
+                
+                <div id="comunicados-list" class="space-y-6">
+                    <!-- Injetado via JS -->
                 </div>
             </div>
 
@@ -424,9 +527,12 @@
                                 </div>
                             </div>
 
-                            <!-- Botão Gerar Prontuário PDF -->
+                            <!-- Botões de Ação do Perfil -->
                             <button onclick="gerarPDF('prontuario')" class="w-full mt-6 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-300 font-bold py-2.5 rounded-lg transition shadow-sm flex justify-center items-center gap-2 text-sm">
                                 <i class="fas fa-file-pdf text-red-500"></i> Exportar Prontuário
+                            </button>
+                            <button onclick="abrirModalEncaminhamento()" class="w-full mt-3 bg-school-secondary hover:bg-[#087f82] text-white font-bold py-2.5 rounded-lg transition shadow-sm flex justify-center items-center gap-2 text-sm only-prof">
+                                <i class="fas fa-user-md"></i> Encaminhar p/ Multi
                             </button>
                         </div>
 
@@ -488,32 +594,136 @@
                 <!-- Preenchido via JS antes de gerar o PDF -->
             </div>
 
-            <!-- MODAL NOVA REUNIÃO -->
+            <!-- VIEW: MULTI - FILA DE ENCAMINHAMENTOS -->
+            <div id="view-multi-encaminhamentos" class="app-section hidden p-6 md:p-8 max-w-7xl mx-auto fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Fila de Encaminhamentos</h2>
+                    <p class="text-gray-500 text-sm mt-1">Alunos encaminhados pelos professores para avaliação multidisciplinar.</p>
+                </div>
+                <div id="fila-encaminhamentos-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Cards injetados via JS -->
+                </div>
+            </div>
+
+            <!-- VIEW: DIREÇÃO - CONSELHO DE CLASSE -->
+            <div id="view-dir-conselho" class="app-section hidden p-6 md:p-8 max-w-7xl mx-auto fade-in">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Conselho de Classe Automático</h2>
+                        <p class="text-gray-500 text-sm mt-1">Cruzamento automático de notas e faltas para decisão final.</p>
+                    </div>
+                    <select id="conselho-turma" onchange="renderConselhoClasse()" class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-school-secondary block p-2.5 font-medium shadow-sm">
+                        <option value="5A">5º Ano A</option>
+                        <option value="5B">5º Ano B</option>
+                        <option value="5C">5º Ano C</option>
+                    </select>
+                </div>
+                <div class="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-xs uppercase tracking-wider text-gray-600 dark:text-gray-400">
+                                    <th class="p-4 font-bold sticky left-0 bg-gray-50 dark:bg-gray-800">Aluno</th>
+                                    <th class="p-4 font-bold text-center">Freq.</th>
+                                    <th class="p-4 font-bold text-center">Port</th>
+                                    <th class="p-4 font-bold text-center">Mat</th>
+                                    <th class="p-4 font-bold text-center">Hist</th>
+                                    <th class="p-4 font-bold text-center">Geog</th>
+                                    <th class="p-4 font-bold text-center">Ciên</th>
+                                    <th class="p-4 font-bold text-center">Situação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="conselho-tbody" class="divide-y divide-gray-100 dark:divide-gray-700">
+                                <!-- Linhas via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL ENCAMINHAMENTO (Professores) -->
+            <div id="modal-encaminhar" class="fixed inset-0 bg-gray-900/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 fade-in border-t-4 border-school-secondary">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-user-md text-school-secondary mr-2"></i>Encaminhar Aluno</h3>
+                    <p class="text-sm text-gray-600 mb-4">Solicitar avaliação da equipe multi para: <strong id="encaminhar-nome-aluno"></strong></p>
+                    <form id="form-encaminhar" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Motivo Principal</label>
+                            <select id="encaminhar-motivo" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-secondary outline-none text-sm font-medium">
+                                <option value="Dificuldade de Aprendizagem">Dificuldade de Aprendizagem</option>
+                                <option value="Comportamento / Disciplina">Comportamento / Disciplina</option>
+                                <option value="Suspeita de Transtorno">Suspeita de Transtorno (TDAH/Autismo, etc)</option>
+                                <option value="Problemas Familiares/Emocionais">Problemas Familiares / Emocionais</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Relato do Professor</label>
+                            <textarea id="encaminhar-relato" required rows="4" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-school-secondary resize-none text-sm" placeholder="Descreva os comportamentos ou dificuldades observadas em sala de aula..."></textarea>
+                        </div>
+                        <div class="flex gap-3 justify-end mt-6 pt-2 border-t border-gray-100">
+                            <button type="button" onclick="document.getElementById('modal-encaminhar').classList.add('hidden'); document.getElementById('form-encaminhar').reset();" class="px-4 py-2 text-gray-500 font-medium hover:bg-gray-100 rounded-lg transition">Cancelar</button>
+                            <button type="submit" class="px-5 py-2 bg-school-secondary hover:bg-[#087f82] text-white font-bold rounded-lg transition shadow">Enviar Ficha</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MODAL NOVA REUNIÃO (Atualizado para Múltiplos) -->
             <div id="modal-reuniao" class="fixed inset-0 bg-gray-900/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
                 <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 fade-in border-t-4 border-school-secondary">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-calendar-plus text-school-secondary mr-2"></i>Nova Solicitação</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-calendar-plus text-school-secondary mr-2"></i>Convocar Reunião</h3>
                     <form id="form-reuniao" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Para quem?</label>
-                            <select id="reuniao-para" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-secondary text-sm font-medium outline-none">
-                                <option value="Equipe Multidisciplinar">Equipe Multidisciplinar</option>
-                                <option value="Direção">Direção</option>
-                                <option value="Profa. Patrícia (5A)">Profa. Patrícia (5A)</option>
-                                <option value="Profa. Cátia (5B)">Profa. Cátia (5B)</option>
-                                <option value="Profa. Cibelle (5C)">Profa. Cibelle (5C)</option>
-                            </select>
+                            <label class="block text-sm font-bold text-gray-700 mb-2 border-b pb-1">Para quem? (Marque quantos quiser)</label>
+                            <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 max-h-32 overflow-y-auto">
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="reuniao-to" value="direcao" class="rounded text-school-primary focus:ring-school-primary"> Gestão / Direção</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="reuniao-to" value="multidisciplinar" class="rounded text-school-primary focus:ring-school-primary"> Equipe Multi</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="reuniao-to" value="patricia.prof@educacao.aguasdesaopedro.sp.gov.br" class="rounded text-school-primary focus:ring-school-primary"> Profa. Patrícia</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="reuniao-to" value="catia.prof@educacao.aguasdesaopedro.sp.gov.br" class="rounded text-school-primary focus:ring-school-primary"> Profa. Cátia</label>
+                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="reuniao-to" value="cibelle.prof@educacao.aguasdesaopedro.sp.gov.br" class="rounded text-school-primary focus:ring-school-primary"> Profa. Cibelle</label>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Data Sugerida</label>
                             <input type="date" id="reuniao-data" required class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-school-secondary">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Motivo / Assunto Principal</label>
-                            <textarea id="reuniao-motivo" required rows="3" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-school-secondary resize-none" placeholder="Ex: Acompanhamento de rotina, Dificuldades pedagógicas..."></textarea>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pauta Principal</label>
+                            <textarea id="reuniao-motivo" required rows="3" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-school-secondary resize-none" placeholder="Qual o assunto?"></textarea>
                         </div>
                         <div class="flex gap-3 justify-end mt-6 pt-2 border-t border-gray-100">
                             <button type="button" onclick="document.getElementById('modal-reuniao').classList.add('hidden'); document.getElementById('form-reuniao').reset();" class="px-4 py-2 text-gray-500 font-medium hover:bg-gray-100 rounded-lg transition">Cancelar</button>
-                            <button type="submit" class="px-5 py-2 bg-school-primary text-white font-bold rounded-lg hover:bg-[#004d5e] transition shadow">Confirmar</button>
+                            <button type="submit" class="px-5 py-2 bg-school-primary text-white font-bold rounded-lg hover:bg-[#004d5e] transition shadow">Enviar Convite</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MODAL COBRANÇA (Direção) -->
+            <div id="modal-cobranca" class="fixed inset-0 bg-gray-900/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 fade-in border-t-4 border-red-500">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-bell text-red-500 mr-2"></i>Alertar Equipe</h3>
+                    <form id="form-cobranca" class="space-y-4">
+                        <input type="hidden" id="cobranca-destinatario">
+                        <p class="text-sm text-gray-600">Enviando alerta restrito para: <br><strong id="cobranca-nome" class="text-gray-800"></strong></p>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Motivo do Alerta</label>
+                            <select id="cobranca-motivo" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 text-sm font-medium outline-none">
+                                <option value="Falta de Lançamento de Notas">Falta de Lançamento de Notas</option>
+                                <option value="Lista de Chamada Atrasada">Lista de Chamada Atrasada</option>
+                                <option value="Atualização de Prontuários">Atualização de Prontuários Pendente</option>
+                                <option value="Outros urgentes">Outros (Descreva abaixo)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mensagem Adicional</label>
+                            <textarea id="cobranca-msg" rows="2" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-red-500 resize-none" placeholder="Opcional..."></textarea>
+                        </div>
+                        <div class="flex gap-3 justify-end mt-4 pt-2 border-t border-gray-100">
+                            <button type="button" onclick="document.getElementById('modal-cobranca').classList.add('hidden');" class="px-4 py-2 text-gray-500 font-medium hover:bg-gray-100 rounded-lg transition">Cancelar</button>
+                            <button type="submit" class="px-5 py-2 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 transition shadow">Disparar Alerta</button>
                         </div>
                     </form>
                 </div>
@@ -557,6 +767,9 @@
         let dbAttendance = {}; // { classId_date: { studentId: true/false } }
         let dbRecords = []; // { id, studentId, text, type, author, date, confidential }
         let dbMeetings = []; // Novo mock para reuniões
+        let dbNotices = []; // Mural de Avisos
+        let dbAlerts = []; // Alertas da Gestão
+        let dbReferrals = []; // Encaminhamentos da Equipe Multi
         let currentClassFilter = 'all'; // Para abas da multi
 
         // Gerador de RA Único
@@ -588,11 +801,18 @@
                 date: new Date().toISOString(), text: 'Sessão de acompanhamento. Aluno relatou dificuldades familiares.', confidential: true
             });
             
-            // Reunião Mock inicial
+            // Reunião Mock inicial (Agora com array de destinatários e email do autor)
             dbMeetings.push({
-                id: 'M1', from: 'Profa. Patrícia', to: 'Equipe Multidisciplinar',
+                id: 'M1', fromEmail: 'patricia.prof@educacao.aguasdesaopedro.sp.gov.br', fromName: 'Profa. Patrícia',
+                to: ['multidisciplinar', 'direcao'],
                 date: new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0],
                 reason: 'Discussão de caso e adaptação do aluno Gabriel', status: 'pendente'
+            });
+
+            // Avisos Iniciais
+            dbNotices.push({
+                id: 'N1', titulo: 'Fechamento de Bimestre', text: 'Prezados, favor garantir que todas as notas estejam no sistema até sexta-feira.', 
+                author: 'Cristinei (Coordenadora)', date: new Date().toISOString(), priority: 'alta'
             });
         }
         initMockDB();
@@ -654,6 +874,10 @@
             if (viewId === 'shared-student-search') loadSharedSearch();
             if (viewId === 'dir-alertas') loadDirAlertas();
             if (viewId === 'reunioes') loadReunioes();
+            if (viewId === 'mural') loadMural();
+            if (viewId === 'notificacoes') loadNotificacoes();
+            if (viewId === 'dir-conselho') renderConselhoClasse();
+            if (viewId === 'multi-encaminhamentos') loadFilaEncaminhamentos();
 
             if (pushHistory && viewId !== 'student-detail') {
                 lastListView = viewId;
@@ -706,9 +930,17 @@
                     showToast(`Bem-vindo(a), ${user.nome.split(' ')[0]}!`, 'success');
                     
                     // Rota inicial por cargo
-                    if (user.role === 'professor') navigate('prof-turmas');
+                    if (user.role === 'professor') {
+                        navigate('prof-turmas');
+                        verificarNovosAlertas();
+                    }
                     else if (user.role === 'direcao') navigate('dir-dashboard');
-                    else navigate('shared-student-search');
+                    else {
+                        navigate('multi-encaminhamentos');
+                        if(dbReferrals.filter(r => r.status === 'pendente').length > 0) {
+                             document.getElementById('badge-encaminhamentos').classList.remove('hidden');
+                        }
+                    }
 
                 } else {
                     showToast('E-mail não encontrado na base de dados.', 'error');
@@ -781,13 +1013,14 @@
             const tbody = document.getElementById('chamada-tbody');
             tbody.innerHTML = '';
 
-            let pres = 0; let aus = 0;
+            let pres = 0; let aus = 0; let just = 0;
 
             alunos.forEach(aluno => {
-                const isPresent = registrosHoje[aluno.id] !== false; // Padrão é presente se não marcado
+                const isPresent = registrosHoje[aluno.id] !== false && registrosHoje[aluno.id] !== 'J';
+                const isJustified = registrosHoje[aluno.id] === 'J';
                 if(registrosHoje[aluno.id] === undefined) registrosHoje[aluno.id] = true; // Inicializa memória
                 
-                if(isPresent) pres++; else aus++;
+                if(isPresent) pres++; else if(!isJustified) aus++; else just++;
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition";
@@ -796,7 +1029,8 @@
                     <td class="p-3 md:p-4 text-center">
                         <div class="inline-flex bg-gray-100 rounded-lg p-1">
                             <button onclick="toggleChamada('${aluno.id}', true, this)" class="px-3 py-1 rounded-md text-xs font-bold transition ${isPresent ? 'bg-green-500 text-white shadow' : 'text-gray-500 hover:bg-gray-200'}">P</button>
-                            <button onclick="toggleChamada('${aluno.id}', false, this)" class="px-3 py-1 rounded-md text-xs font-bold transition ${!isPresent ? 'bg-red-500 text-white shadow' : 'text-gray-500 hover:bg-gray-200'}">F</button>
+                            <button onclick="toggleChamada('${aluno.id}', false, this)" class="px-3 py-1 rounded-md text-xs font-bold transition ${!isPresent && !isJustified ? 'bg-red-500 text-white shadow' : 'text-gray-500 hover:bg-gray-200'}">F</button>
+                            <button onclick="toggleChamada('${aluno.id}', 'J', this)" class="px-3 py-1 rounded-md text-xs font-bold transition ${isJustified ? 'bg-yellow-500 text-white shadow' : 'text-gray-500 hover:bg-gray-200'}">J</button>
                         </div>
                     </td>
                     <td class="p-3 md:p-4 text-center text-sm font-bold ${calcularFrequenciaGeral(aluno) >= 75 ? 'text-green-600' : 'text-red-600'}">
@@ -805,28 +1039,36 @@
                 `;
                 tbody.appendChild(tr);
             });
-            document.getElementById('chamada-stats').textContent = `${pres} presentes / ${aus} ausentes`;
+            document.getElementById('chamada-stats').textContent = `${pres} presentes / ${aus} ausentes / ${just} justif.`;
             // Salva estado invisivel na memoria temp
             dbAttendance[key] = registrosHoje;
         }
 
-        window.toggleChamada = function(studentId, isPresent, btnElement) {
+        window.toggleChamada = function(studentId, statusValue, btnElement) {
             const date = document.getElementById('chamada-date').value;
             const key = `${currentUser.turmaId}_${date}`;
             if(!dbAttendance[key]) dbAttendance[key] = {};
-            dbAttendance[key][studentId] = isPresent;
+            dbAttendance[key][studentId] = statusValue;
             
             // Atualiza UI direto
             const parent = btnElement.parentElement;
-            const btnP = parent.children[0]; const btnF = parent.children[1];
+            const btnP = parent.children[0]; 
+            const btnF = parent.children[1];
+            const btnJ = parent.children[2];
             
-            if(isPresent) {
+            // Reseta estilo de todos os botões
+            btnP.className = 'px-3 py-1 rounded-md text-xs font-bold transition text-gray-500 hover:bg-gray-200';
+            btnF.className = 'px-3 py-1 rounded-md text-xs font-bold transition text-gray-500 hover:bg-gray-200';
+            btnJ.className = 'px-3 py-1 rounded-md text-xs font-bold transition text-gray-500 hover:bg-gray-200';
+
+            if(statusValue === true) {
                 btnP.className = 'px-3 py-1 rounded-md text-xs font-bold transition bg-green-500 text-white shadow';
-                btnF.className = 'px-3 py-1 rounded-md text-xs font-bold transition text-gray-500 hover:bg-gray-200';
-            } else {
+            } else if(statusValue === false) {
                 btnF.className = 'px-3 py-1 rounded-md text-xs font-bold transition bg-red-500 text-white shadow';
-                btnP.className = 'px-3 py-1 rounded-md text-xs font-bold transition text-gray-500 hover:bg-gray-200';
+            } else if(statusValue === 'J') {
+                btnJ.className = 'px-3 py-1 rounded-md text-xs font-bold transition bg-yellow-500 text-white shadow';
             }
+            
             updateChamadaStats();
         }
 
@@ -844,9 +1086,27 @@
             const date = document.getElementById('chamada-date').value;
             const key = `${currentUser.turmaId}_${date}`;
             const reg = dbAttendance[key];
-            let p=0, f=0;
-            for(let id in reg) { if(reg[id]) p++; else f++; }
-            document.getElementById('chamada-stats').textContent = `${p} presentes / ${f} ausentes`;
+            let p=0, f=0, j=0;
+            for(let id in reg) { 
+                if(reg[id] === true) p++; 
+                else if(reg[id] === false) f++; 
+                else if(reg[id] === 'J') j++;
+            }
+            document.getElementById('chamada-stats').textContent = `${p} presentes / ${f} ausentes / ${j} justif.`;
+        }
+
+        window.preencherRestantesPresentes = function() {
+            const date = document.getElementById('chamada-date').value;
+            const key = `${currentUser.turmaId}_${date}`;
+            const alunos = dbStudents.filter(s => s.classId === currentUser.turmaId);
+            alunos.forEach(a => { 
+                // Só marca presente se não tiver nenhuma marcação explícita no dia
+                if(dbAttendance[key][a.id] === undefined) {
+                    dbAttendance[key][a.id] = true; 
+                }
+            });
+            renderChamadaTabela();
+            showToast('Alunos pendentes marcados como presentes!', 'success');
         }
 
         window.salvarChamada = function() {
@@ -872,6 +1132,8 @@
             const alunos = dbStudents.filter(s => s.classId === currentUser.turmaId).sort((a,b) => a.name.localeCompare(b.name));
             const tbody = document.getElementById('notas-tbody');
             tbody.innerHTML = '';
+            
+            let rowIndex = 0;
 
             alunos.forEach(aluno => {
                 if(!dbGrades[aluno.id]) dbGrades[aluno.id] = {};
@@ -882,17 +1144,47 @@
                 tr.className = "hover:bg-gray-50 transition";
                 
                 let mediaHtml = calcularMediaHtml(notas.n1, notas.n2, notas.n3, notas.n4);
+                
+                const getColorClass = (val) => {
+                    if(val === '') return 'bg-white';
+                    return val >= 6.0 ? 'bg-blue-50 text-blue-700 font-bold' : 'bg-red-50 text-red-700 font-bold';
+                };
 
                 tr.innerHTML = `
-                    <td class="p-3 border-r border-gray-100 font-medium text-gray-800 text-sm sticky left-0 bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">${aluno.name}</td>
-                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" min="0" max="10" value="${notas.n1}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n1', this)" class="w-full text-center p-1 border border-gray-200 rounded focus:ring-1 focus:ring-school-secondary outline-none text-sm"></td>
-                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" min="0" max="10" value="${notas.n2}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n2', this)" class="w-full text-center p-1 border border-gray-200 rounded focus:ring-1 focus:ring-school-secondary outline-none text-sm"></td>
-                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" min="0" max="10" value="${notas.n3}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n3', this)" class="w-full text-center p-1 border border-gray-200 rounded focus:ring-1 focus:ring-school-secondary outline-none text-sm"></td>
-                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" min="0" max="10" value="${notas.n4}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n4', this)" class="w-full text-center p-1 border border-gray-200 rounded focus:ring-1 focus:ring-school-secondary outline-none text-sm"></td>
-                    <td class="p-3 text-center bg-blue-50/50 font-bold media-cell" id="media-${aluno.id}">${mediaHtml}</td>
+                    <td class="p-3 border-r border-gray-100 font-medium text-gray-800 text-sm sticky left-0 dark:bg-[#1e1e1e] bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">${aluno.name}</td>
+                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" data-row="${rowIndex}" data-col="0" value="${notas.n1}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n1', this)" class="notas-input w-full text-center p-1 border border-gray-200 rounded focus:ring-2 focus:ring-school-secondary outline-none text-sm transition-colors ${getColorClass(notas.n1)}"></td>
+                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" data-row="${rowIndex}" data-col="1" value="${notas.n2}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n2', this)" class="notas-input w-full text-center p-1 border border-gray-200 rounded focus:ring-2 focus:ring-school-secondary outline-none text-sm transition-colors ${getColorClass(notas.n2)}"></td>
+                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" data-row="${rowIndex}" data-col="2" value="${notas.n3}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n3', this)" class="notas-input w-full text-center p-1 border border-gray-200 rounded focus:ring-2 focus:ring-school-secondary outline-none text-sm transition-colors ${getColorClass(notas.n3)}"></td>
+                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" data-row="${rowIndex}" data-col="3" value="${notas.n4}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n4', this)" class="notas-input w-full text-center p-1 border border-gray-200 rounded focus:ring-2 focus:ring-school-secondary outline-none text-sm transition-colors ${getColorClass(notas.n4)}"></td>
+                    <td class="p-3 text-center bg-blue-50/50 dark:bg-gray-800 font-bold media-cell" id="media-${aluno.id}">${mediaHtml}</td>
                 `;
                 tbody.appendChild(tr);
+                rowIndex++;
             });
+            
+            // Ativar Navegação por Setas (Estilo Excel)
+            document.querySelectorAll('.notas-input').forEach(input => {
+                input.addEventListener('keydown', handleExcelNav);
+            });
+        }
+        
+        function handleExcelNav(e) {
+            if(!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+            e.preventDefault();
+            
+            const r = parseInt(e.target.getAttribute('data-row'));
+            const c = parseInt(e.target.getAttribute('data-col'));
+            let nextInput = null;
+            
+            if(e.key === 'ArrowUp') nextInput = document.querySelector(`.notas-input[data-row="${r-1}"][data-col="${c}"]`);
+            if(e.key === 'ArrowDown') nextInput = document.querySelector(`.notas-input[data-row="${r+1}"][data-col="${c}"]`);
+            if(e.key === 'ArrowLeft') nextInput = document.querySelector(`.notas-input[data-row="${r}"][data-col="${c-1}"]`);
+            if(e.key === 'ArrowRight') nextInput = document.querySelector(`.notas-input[data-row="${r}"][data-col="${c+1}"]`);
+            
+            if(nextInput) {
+                nextInput.focus();
+                nextInput.select();
+            }
         }
 
         window.updateNota = function(studentId, disciplina, bim, inputEl) {
@@ -900,6 +1192,9 @@
             if(isNaN(val)) val = '';
             else if(val < 0) val = 0; else if(val > 10) val = 10;
             inputEl.value = val;
+            
+            // Cor condicional
+            inputEl.className = `notas-input w-full text-center p-1 border border-gray-200 rounded focus:ring-2 focus:ring-school-secondary outline-none text-sm transition-colors ${val === '' ? 'bg-white' : (val >= 6.0 ? 'bg-blue-50 text-blue-700 font-bold' : 'bg-red-50 text-red-700 font-bold')}`;
 
             dbGrades[studentId][disciplina][bim] = val;
             
@@ -924,208 +1219,171 @@
         }
 
         // --- DIREÇÃO: DASHBOARD ---
-        function loadDirDashboard() {
-            if(currentUser.role !== 'direcao') return;
+        // --- FUNÇÕES NOVAS (ENCAMINHAMENTO, CONSELHO E DARK MODE) ---
 
-            document.getElementById('dir-total-alunos').textContent = dbStudents.length;
+        // Modo Escuro
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('dark-mode-icon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+            document.getElementById('dark-mode-text').textContent = isDark ? 'Modo Claro' : 'Modo Escuro';
             
-            let sumFreq = 0;
-            let criticalCount = 0;
-            dbStudents.forEach(s => {
-                let f = calcularFrequenciaGeral(s);
-                sumFreq += f;
-                if (f < 75) criticalCount++;
-            });
-            document.getElementById('dir-media-freq').textContent = Math.round(sumFreq / dbStudents.length) + '%';
-            
-            // Conta registros sigilosos (casos graves Multi)
-            const sigilosos = dbRecords.filter(r => r.confidential).length;
-            document.getElementById('dir-total-alertas').textContent = criticalCount + sigilosos;
-
-            // Renderizar Equipe
-            const eqList = document.getElementById('dir-equipe-lista');
-            eqList.innerHTML = '';
-            mockUsers.forEach(u => {
-                if(u.role === 'direcao') return; // Pula os próprios diretores
-                const icon = u.role === 'professor' ? 'fa-chalkboard-teacher' : 'fa-user-md';
-                const color = u.role === 'professor' ? 'text-blue-500 bg-blue-50' : 'text-purple-500 bg-purple-50';
-                eqList.innerHTML += `
-                    <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-100 transition">
-                        <div class="w-10 h-10 rounded-full ${color} flex items-center justify-center flex-shrink-0"><i class="fas ${icon}"></i></div>
-                        <div>
-                            <p class="text-sm font-bold text-gray-800">${u.nome}</p>
-                            <p class="text-xs text-gray-500">${u.role === 'professor' ? 'Turma ' + u.turmaId : 'Especialista'}</p>
-                        </div>
-                    </div>`;
-            });
-
-            // Renderizar Turmas
-            const tList = document.getElementById('dir-turmas-lista');
-            tList.innerHTML = '';
-            ['5A','5B','5C'].forEach(tid => {
-                const al = dbStudents.filter(s => s.classId === tid);
-                tList.innerHTML += `
-                    <div class="flex items-center justify-between p-3 rounded-lg border border-gray-100 bg-gray-50">
-                        <div>
-                            <p class="text-sm font-bold text-gray-800">${mockClasses[tid].name}</p>
-                            <p class="text-xs text-gray-500">${mockClasses[tid].prof}</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm font-bold text-school-primary">${al.length} alunos</p>
-                        </div>
-                    </div>`;
-            });
+            // Re-renderizar gráficos para ajustar as cores
+            if(currentView === 'dir-dashboard') renderDashboardCharts(); 
         }
 
-        // --- BUSCA GERAL (Direção e Multi) ---
-        function loadSharedSearch() {
-            const input = document.getElementById('global-search-input');
-            input.oninput = (e) => renderGlobalStudents(e.target.value);
-            renderGlobalStudents('');
+        // Encaminhamento
+        function abrirModalEncaminhamento() {
+            if(!activeStudentId) return;
+            const aluno = dbStudents.find(s => s.id === activeStudentId);
+            document.getElementById('encaminhar-nome-aluno').textContent = aluno.name;
+            document.getElementById('modal-encaminhar').classList.remove('hidden');
         }
 
-        function setClassFilter(classId) {
-            currentClassFilter = classId;
-            document.querySelectorAll('.class-filter-btn').forEach(btn => {
-                btn.className = 'class-filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-lg text-sm font-bold transition hover:bg-gray-50 whitespace-nowrap';
+        document.getElementById('form-encaminhar').addEventListener('submit', (e) => {
+            e.preventDefault();
+            dbReferrals.push({
+                id: 'REF' + Date.now(),
+                studentId: activeStudentId,
+                profName: currentUser.nome,
+                motivo: document.getElementById('encaminhar-motivo').value,
+                relato: document.getElementById('encaminhar-relato').value,
+                data: new Date().toISOString(),
+                status: 'pendente'
             });
-            document.getElementById(`filter-btn-${classId}`).className = 'class-filter-btn px-4 py-2 bg-school-primary text-white rounded-lg text-sm font-bold transition shadow-sm whitespace-nowrap';
-            renderGlobalStudents(document.getElementById('global-search-input').value);
-        }
+            document.getElementById('modal-encaminhar').classList.add('hidden');
+            document.getElementById('form-encaminhar').reset();
+            showToast('Encaminhamento enviado para a Equipe Multidisciplinar!', 'success');
+        });
 
-        function renderGlobalStudents(filterTerm = '') {
-            const grid = document.getElementById('global-students-grid');
+        function loadFilaEncaminhamentos() {
+            const grid = document.getElementById('fila-encaminhamentos-grid');
             grid.innerHTML = '';
-            const term = filterTerm.toLowerCase();
+            document.getElementById('badge-encaminhamentos').classList.add('hidden'); // Limpa notificação
 
-            let filtered = dbStudents.filter(s => s.name.toLowerCase().includes(term));
-            
-            // Aplica filtro de aba (Multi)
-            if (currentClassFilter !== 'all') {
-                filtered = filtered.filter(s => s.classId === currentClassFilter);
-            }
-            
-            filtered.forEach(aluno => {
-                const card = document.createElement('div');
-                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-school-secondary hover:shadow-md transition cursor-pointer flex items-center gap-4";
-                card.onclick = () => openStudentDetail(aluno.id);
-                card.innerHTML = `
-                    <div class="w-12 h-12 bg-[#005f73]/10 rounded-full flex items-center justify-center text-school-primary font-bold flex-shrink-0 border border-[#005f73]/20">
-                        ${aluno.name.charAt(0)}
-                    </div>
-                    <div class="flex-grow min-w-0">
-                        <h3 class="font-bold text-gray-800 text-sm truncate">${aluno.name}</h3>
-                        <div class="flex gap-2 text-[11px] mt-1">
-                            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded">Turma ${aluno.classId}</span>
-                            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded">RA ${aluno.ra}</span>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // --- DIREÇÃO: ALERTAS (MÉDIAS E FALTAS) ---
-        function loadDirAlertas() {
-            const gridFaltas = document.getElementById('grid-alertas-faltas');
-            const gridNotas = document.getElementById('grid-alertas-notas');
-            gridFaltas.innerHTML = ''; gridNotas.innerHTML = '';
-
-            let countFaltas = 0, countNotas = 0;
-
-            dbStudents.forEach(aluno => {
-                // 1. Verificar Faltas
-                const freq = calcularFrequenciaGeral(aluno);
-                if (freq < 75) {
-                    gridFaltas.innerHTML += criarCardAlerta(aluno, 'Faltas', `${freq}% de presença geral`);
-                    countFaltas++;
-                }
-
-                // 2. Verificar Notas Baixas
-                let notasBaixas = [];
-                const notas = dbGrades[aluno.id] || {};
-                for (let disc in notas) {
-                    let n = notas[disc];
-                    let sum = 0, q = 0;
-                    if(n.n1 !== '') { sum+=n.n1; q++; }
-                    if(n.n2 !== '') { sum+=n.n2; q++; }
-                    if(n.n3 !== '') { sum+=n.n3; q++; }
-                    if(n.n4 !== '') { sum+=n.n4; q++; }
-                    if (q > 0) {
-                        let media = sum/q;
-                        if (media < 6.0) notasBaixas.push(`${disc} (${media.toFixed(1)})`);
-                    }
-                }
-                
-                if (notasBaixas.length > 0) {
-                    gridNotas.innerHTML += criarCardAlerta(aluno, 'Notas', notasBaixas.join(', '));
-                    countNotas++;
-                }
-            });
-
-            document.getElementById('vazio-faltas').style.display = countFaltas === 0 ? 'block' : 'none';
-            document.getElementById('vazio-notas').style.display = countNotas === 0 ? 'block' : 'none';
-        }
-
-        function criarCardAlerta(aluno, tipo, detalhe) {
-            return `
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 flex justify-between items-center cursor-pointer hover:border-gray-400 transition" onclick="openStudentDetail('${aluno.id}')">
-                    <div>
-                        <h4 class="font-bold text-gray-800 text-sm">${aluno.name} <span class="text-xs font-normal bg-gray-200 px-1.5 py-0.5 rounded ml-1">${aluno.classId}</span></h4>
-                        <p class="text-xs ${tipo === 'Faltas' ? 'text-red-600' : 'text-orange-600'} font-bold mt-1">
-                            ${detalhe}
-                        </p>
-                    </div>
-                    <div class="bg-white p-2 rounded shadow-sm">
-                        <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                    </div>
-                </div>
-            `;
-        }
-
-        // --- SISTEMA DE REUNIÕES ---
-        function loadReunioes() {
-            const list = document.getElementById('reunioes-list');
-            list.innerHTML = '';
-            
-            if (dbMeetings.length === 0) {
-                list.innerHTML = `<div class="text-center py-10 text-gray-400"><i class="fas fa-coffee text-3xl mb-3 block"></i>Nenhuma reunião agendada.</div>`;
+            if(dbReferrals.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-10 text-gray-400"><i class="fas fa-check-circle text-4xl text-green-500 mb-3 block"></i>Nenhum encaminhamento pendente.</div>`;
                 return;
             }
 
-            // Ordena mais próximas primeiro
-            dbMeetings.sort((a,b) => new Date(a.date) - new Date(b.date));
+            dbReferrals.sort((a,b) => new Date(b.data) - new Date(a.data)).forEach(ref => {
+                const aluno = dbStudents.find(s => s.id === ref.studentId);
+                const dataF = new Date(ref.data).toLocaleDateString('pt-BR');
+                const badgeStatus = ref.status === 'pendente' ? '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold uppercase border border-red-200">Aguardando Avaliação</span>' : '<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold uppercase border border-green-200">Em Acompanhamento</span>';
 
-            dbMeetings.forEach(mtg => {
-                const dataFormat = mtg.date.split('-').reverse().join('/');
-                list.innerHTML += `
-                    <div class="flex items-start md:items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-                        <div class="bg-blue-50 text-blue-600 p-3 rounded-lg flex-shrink-0 text-center min-w-[70px]">
-                            <p class="text-xs font-bold uppercase">Data</p>
-                            <p class="text-sm font-bold">${dataFormat.substring(0,5)}</p>
+                grid.innerHTML += `
+                    <div class="bg-white p-5 rounded-xl shadow-sm border ${ref.status === 'pendente' ? 'border-red-300 border-l-4' : 'border-gray-200'}">
+                        <div class="flex justify-between items-start mb-3 border-b border-gray-100 pb-3">
+                            <div>
+                                <h3 class="font-bold text-gray-800 text-lg">${aluno.name}</h3>
+                                <p class="text-xs text-gray-500">Turma: ${mockClasses[aluno.classId].name} | Encaminhado por: ${ref.profName}</p>
+                            </div>
+                            <div class="text-right">
+                                ${badgeStatus}<br>
+                                <span class="text-[10px] text-gray-400 mt-1 block">${dataF}</span>
+                            </div>
                         </div>
-                        <div class="flex-grow">
-                            <h3 class="font-bold text-gray-800 text-sm md:text-base">${mtg.reason}</h3>
-                            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-user-friends mr-1"></i> <strong>De:</strong> ${mtg.from} | <strong>Para:</strong> ${mtg.to}</p>
-                        </div>
-                        <div class="hidden md:block">
-                            <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full border border-yellow-200">Pendente</span>
+                        <p class="text-sm font-bold text-gray-700 mb-1">Motivo: <span class="text-red-600">${ref.motivo}</span></p>
+                        <p class="text-sm text-gray-600 italic bg-gray-50 p-3 rounded-lg border border-gray-100 mb-4">"${ref.relato}"</p>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="openStudentDetail('${aluno.id}')" class="flex-1 bg-school-secondary hover:bg-[#087f82] text-white py-2 rounded-lg text-sm font-bold transition shadow-sm"><i class="fas fa-folder-open mr-1"></i> Abrir Prontuário</button>
+                            ${ref.status === 'pendente' ? `<button onclick="iniciarAcompanhamento('${ref.id}')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-sm font-bold transition shadow-sm"><i class="fas fa-check mr-1"></i> Iniciar Caso</button>` : ''}
                         </div>
                     </div>
                 `;
             });
+        }
+        
+        window.iniciarAcompanhamento = function(refId) {
+            const ref = dbReferrals.find(r => r.id === refId);
+            if(ref) {
+                ref.status = 'em_andamento';
+                loadFilaEncaminhamentos();
+                showToast('Acompanhamento iniciado. Caso transferido para o prontuário do aluno.', 'success');
+            }
+        }
+
+        // Conselho de Classe
+        function renderConselhoClasse() {
+            const turmaId = document.getElementById('conselho-turma').value;
+            const alunos = dbStudents.filter(s => s.classId === turmaId).sort((a,b) => a.name.localeCompare(b.name));
+            const tbody = document.getElementById('conselho-tbody');
+            tbody.innerHTML = '';
+            
+            const disciplinas = ['Portugues', 'Matematica', 'Historia', 'Geografia', 'Ciencias'];
+
+            alunos.forEach(aluno => {
+                let tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 dark:hover:bg-gray-800 transition";
+                
+                const freq = calcularFrequenciaGeral(aluno);
+                let mediasHtml = '';
+                let reprovacoes = 0;
+                
+                disciplinas.forEach(disc => {
+                    let media = '-';
+                    if(dbGrades[aluno.id] && dbGrades[aluno.id][disc]) {
+                        const n = dbGrades[aluno.id][disc];
+                        let sum=0, q=0;
+                        if(n.n1!==''){sum+=n.n1;q++;} if(n.n2!==''){sum+=n.n2;q++;} if(n.n3!==''){sum+=n.n3;q++;} if(n.n4!==''){sum+=n.n4;q++;}
+                        if(q > 0) {
+                            let m = (sum/q).toFixed(1);
+                            media = m;
+                            if (m < 6.0 && q === 4) reprovacoes++; 
+                        }
+                    }
+                    const color = media === '-' ? 'text-gray-400' : (media >= 6.0 ? 'text-blue-600' : 'text-red-600 font-bold bg-red-50 dark:bg-red-900/30');
+                    mediasHtml += `<td class="p-3 border-r border-gray-100 dark:border-gray-700 text-center text-sm ${color}">${media}</td>`;
+                });
+
+                let statusText = "Aprovado";
+                let statusColor = "bg-green-100 text-green-800 border-green-200";
+                
+                if (freq < 75) { statusText = "Reprov. Faltas"; statusColor = "bg-red-100 text-red-800 border-red-200"; }
+                else if (reprovacoes >= 3) { statusText = "Reprov. Notas"; statusColor = "bg-red-100 text-red-800 border-red-200"; }
+                else if (reprovacoes > 0) { statusText = "Recuperação Final"; statusColor = "bg-yellow-100 text-yellow-800 border-yellow-200"; }
+
+                tr.innerHTML = `
+                    <td class="p-3 border-r border-gray-100 dark:border-gray-700 font-medium sticky left-0 bg-white dark:bg-[#1e1e1e] shadow-sm">${aluno.name}</td>
+                    <td class="p-3 border-r border-gray-100 dark:border-gray-700 text-center font-bold ${freq >= 75 ? 'text-green-600' : 'text-red-600'}">${freq}%</td>
+                    ${mediasHtml}
+                    <td class="p-3 text-center">
+                        <span class="px-2 py-1 text-[10px] font-bold uppercase rounded border ${statusColor}">${statusText}</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.responderReuniao = function(id, resposta) {
+            const mtg = dbMeetings.find(m => m.id === id);
+            if(mtg) {
+                mtg.status = resposta;
+                showToast(resposta === 'aceita' ? 'Reunião Confirmada!' : 'Reunião Recusada.', resposta === 'aceita' ? 'success' : 'info');
+                loadReunioes();
+            }
         }
 
         document.getElementById('form-reuniao').addEventListener('submit', (e) => {
             e.preventDefault();
-            const to = document.getElementById('reuniao-para').value;
+            
+            // Pega todos os checkboxes marcados
+            const checkboxes = document.querySelectorAll('input[name="reuniao-to"]:checked');
+            if(checkboxes.length === 0) {
+                showToast('Selecione pelo menos um destinatário!', 'error');
+                return;
+            }
+            
+            const toArray = Array.from(checkboxes).map(cb => cb.value);
             const date = document.getElementById('reuniao-data').value;
             const reason = document.getElementById('reuniao-motivo').value;
 
             dbMeetings.push({
                 id: 'M' + Date.now(),
-                from: currentUser.nome,
-                to: to,
+                fromEmail: currentUser.email,
+                fromName: currentUser.nome,
+                to: toArray,
                 date: date,
                 reason: reason,
                 status: 'pendente'
@@ -1133,9 +1391,115 @@
 
             document.getElementById('modal-reuniao').classList.add('hidden');
             document.getElementById('form-reuniao').reset();
-            showToast('Solicitação de reunião enviada!', 'success');
-            loadReunioes(); // Recarrega a lista
+            showToast('Convites enviados com sucesso!', 'success');
+            loadReunioes(); 
         });
+
+        // --- MURAL DE AVISOS ---
+        function loadMural() {
+            const list = document.getElementById('mural-list');
+            list.innerHTML = '';
+            
+            // Ordena mais novo primeiro
+            const avisos = [...dbNotices].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            if(avisos.length === 0) {
+                list.innerHTML = `<div class="text-center py-10 text-gray-400">Sem avisos no momento.</div>`;
+                return;
+            }
+
+            avisos.forEach(aviso => {
+                const dataF = new Date(aviso.date).toLocaleDateString('pt-BR');
+                const isUrgent = aviso.priority === 'alta';
+                const colorBorder = isUrgent ? 'border-red-500' : 'border-blue-400';
+                const colorBg = isUrgent ? 'bg-red-50' : 'bg-white';
+                const icone = isUrgent ? '<i class="fas fa-exclamation-circle text-red-500"></i>' : '<i class="fas fa-info-circle text-blue-400"></i>';
+
+                list.innerHTML += `
+                    <div class="p-5 rounded-xl border-l-4 border border-gray-200 shadow-sm ${colorBorder} ${colorBg}">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-gray-800 flex items-center gap-2">${icone} ${aviso.titulo}</h4>
+                            <span class="text-[10px] text-gray-400 uppercase font-bold">${dataF}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">${aviso.text}</p>
+                        <p class="text-xs text-gray-400 font-medium text-right border-t border-gray-100/50 pt-2">Enviado por: ${aviso.author}</p>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('form-mural').addEventListener('submit', (e) => {
+            e.preventDefault();
+            dbNotices.push({
+                id: 'N' + Date.now(),
+                titulo: document.getElementById('mural-titulo').value,
+                priority: document.getElementById('mural-prioridade').value,
+                text: document.getElementById('mural-mensagem').value,
+                author: currentUser.nome,
+                date: new Date().toISOString()
+            });
+            document.getElementById('form-mural').reset();
+            showToast('Aviso publicado no mural!', 'success');
+            loadMural();
+        });
+
+        // --- SISTEMA DE ALERTAS (COBRANÇAS) PARA PROFESSORES ---
+        window.abrirCobranca = function(email, nome) {
+            document.getElementById('cobranca-destinatario').value = email;
+            document.getElementById('cobranca-nome').textContent = nome;
+            document.getElementById('modal-cobranca').classList.remove('hidden');
+        }
+
+        document.getElementById('form-cobranca').addEventListener('submit', (e) => {
+            e.preventDefault();
+            dbAlerts.push({
+                id: 'A' + Date.now(),
+                toEmail: document.getElementById('cobranca-destinatario').value,
+                fromName: currentUser.nome,
+                motivo: document.getElementById('cobranca-motivo').value,
+                msg: document.getElementById('cobranca-msg').value,
+                date: new Date().toISOString()
+            });
+            document.getElementById('modal-cobranca').classList.add('hidden');
+            document.getElementById('form-cobranca').reset();
+            showToast('Alerta enviado à equipe!', 'success');
+        });
+
+        function verificarNovosAlertas() {
+            if(currentUser.role !== 'professor') return;
+            const meusAlertas = dbAlerts.filter(a => a.toEmail === currentUser.email);
+            if(meusAlertas.length > 0) {
+                // Em um cenário real verificaríamos quais não foram lidos
+                showToast(`Você tem ${meusAlertas.length} novo(s) alerta(s) da gestão.`, 'error');
+            }
+        }
+
+        function loadNotificacoes() {
+            const list = document.getElementById('notificacoes-list');
+            list.innerHTML = '';
+            
+            const meusAlertas = dbAlerts.filter(a => a.toEmail === currentUser.email).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            if(meusAlertas.length === 0) {
+                list.innerHTML = `<div class="text-center py-10 text-gray-400"><i class="fas fa-check-circle text-3xl mb-3 block text-green-500"></i>Tudo em dia! Nenhuma cobrança pendente.</div>`;
+                return;
+            }
+
+            meusAlertas.forEach(alerta => {
+                const dataF = new Date(alerta.date).toLocaleDateString('pt-BR');
+                list.innerHTML += `
+                    <div class="p-4 rounded-lg bg-red-50 border border-red-200">
+                        <div class="flex items-center gap-2 mb-1">
+                            <i class="fas fa-exclamation-triangle text-red-500"></i>
+                            <h4 class="font-bold text-red-800 text-sm uppercase">${alerta.motivo}</h4>
+                        </div>
+                        <p class="text-sm text-red-700 font-medium ml-6">${alerta.msg || 'Atenção solicitada imediata.'}</p>
+                        <p class="text-[10px] text-red-400 mt-2 text-right">Notificado em: ${dataF} por ${alerta.fromName}</p>
+                    </div>
+                `;
+            });
+        }
+
 
         // --- DETALHE DO ALUNO (Comum) ---
         function openStudentDetail(studentId) {
@@ -1368,6 +1732,299 @@
                 container.classList.add('hidden');
                 container.innerHTML = '';
             });
+        }
+
+        // ==========================================
+        // FUNÇÕES ADICIONAIS FALTANTES (GRÁFICOS E BUSCA)
+        // ==========================================
+
+        function loadDirDashboard() {
+            if (currentUser.role !== 'direcao') return;
+
+            // Preenche os KPIs Superiores
+            document.getElementById('dir-total-alunos').textContent = dbStudents.length;
+
+            let totalFreq = 0;
+            let alertasCriticos = 0;
+            dbStudents.forEach(s => {
+                let freq = calcularFrequenciaGeral(s);
+                totalFreq += freq;
+                if (freq < 75) alertasCriticos++;
+            });
+            let mediaFreq = dbStudents.length > 0 ? Math.round(totalFreq / dbStudents.length) : 0;
+            document.getElementById('dir-media-freq').textContent = mediaFreq + '%';
+            document.getElementById('dir-total-alertas').textContent = alertasCriticos;
+
+            // Preenche a Lista de Equipe
+            const equipeContainer = document.getElementById('dir-equipe-lista');
+            equipeContainer.innerHTML = '';
+            mockUsers.filter(u => u.role === 'professor' || u.role === 'multidisciplinar').forEach(u => {
+                equipeContainer.innerHTML += `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-school-primary text-white flex items-center justify-center font-bold text-xs">${u.nome.charAt(0)}</div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800 dark:text-gray-200">${u.nome}</p>
+                                <p class="text-[10px] text-gray-500 uppercase">${u.role}</p>
+                            </div>
+                        </div>
+                        <button onclick="abrirCobranca('${u.email}', '${u.nome}')" class="text-gray-400 hover:text-red-500 transition" title="Cobrar/Alertar"><i class="fas fa-bell"></i></button>
+                    </div>
+                `;
+            });
+
+            // Preenche a Lista de Turmas
+            const turmasContainer = document.getElementById('dir-turmas-lista');
+            turmasContainer.innerHTML = '';
+            Object.values(mockClasses).forEach(t => {
+                let alunosTurma = dbStudents.filter(s => s.classId === t.id);
+                turmasContainer.innerHTML += `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition" onclick="navigate('shared-student-search'); setClassFilter('${t.id}')">
+                        <div>
+                            <p class="text-sm font-bold text-gray-800 dark:text-gray-200">${t.name}</p>
+                            <p class="text-[10px] text-gray-500">${t.prof} - ${alunosTurma.length} Alunos</p>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                `;
+            });
+
+            // Chama a função que desenha os gráficos
+            renderDashboardCharts();
+        }
+
+        function loadReunioes() {
+            const list = document.getElementById('reunioes-list');
+            list.innerHTML = '';
+
+            // Filtra as reuniões onde o usuário é remetente ou destinatário
+            const minhasReunioes = dbMeetings.filter(m => 
+                m.fromEmail === currentUser.email || 
+                m.to.includes(currentUser.email) || 
+                m.to.includes(currentUser.role)
+            ).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (minhasReunioes.length === 0) {
+                list.innerHTML = `<div class="text-center py-10 text-gray-400"><i class="fas fa-calendar-check text-4xl text-green-500 mb-3 block"></i>Nenhuma reunião agendada.</div>`;
+                return;
+            }
+
+            minhasReunioes.forEach(mtg => {
+                // Formatação segura de data (YYYY-MM-DD para o fuso brasileiro)
+                const dataParts = mtg.date.split('-');
+                const dataF = dataParts.length === 3 
+                    ? new Date(dataParts[0], dataParts[1] - 1, dataParts[2]).toLocaleDateString('pt-BR')
+                    : new Date(mtg.date).toLocaleDateString('pt-BR');
+                    
+                const isSender = mtg.fromEmail === currentUser.email;
+                
+                let statusBadge = '';
+                if(mtg.status === 'pendente') statusBadge = '<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold border border-yellow-200">Aguardando Resposta</span>';
+                else if(mtg.status === 'aceita') statusBadge = '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold border border-green-200">Confirmada</span>';
+                else statusBadge = '<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold border border-red-200">Recusada / Remarcada</span>';
+
+                let actions = '';
+                // Mostra botões de aceitar/recusar apenas se não foi o usuário quem criou
+                if(!isSender && mtg.status === 'pendente') {
+                    actions = `
+                        <div class="mt-3 flex gap-2">
+                            <button onclick="responderReuniao('${mtg.id}', 'aceita')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-1.5 rounded-lg text-sm font-bold shadow transition"><i class="fas fa-check mr-1"></i> Confirmar</button>
+                            <button onclick="responderReuniao('${mtg.id}', 'recusada')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-1.5 rounded-lg text-sm font-bold shadow transition"><i class="fas fa-times mr-1"></i> Recusar</button>
+                        </div>
+                    `;
+                }
+
+                list.innerHTML += `
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm relative">
+                        <div class="flex justify-between items-start mb-2 border-b border-gray-200 dark:border-gray-700 pb-2">
+                            <div>
+                                <h4 class="font-bold text-gray-800 dark:text-white flex items-center gap-2"><i class="fas fa-calendar-alt text-school-secondary"></i> ${dataF}</h4>
+                                <p class="text-xs text-gray-500 mt-0.5">Convocado por: ${isSender ? 'Você' : mtg.fromName}</p>
+                            </div>
+                            <div class="text-right">
+                                ${statusBadge}
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-700 dark:text-gray-300 font-medium"><strong>Pauta:</strong> ${mtg.reason}</p>
+                        ${actions}
+                    </div>
+                `;
+            });
+        }
+
+        let chartNotasInstance = null;
+        let chartFreqInstance = null;
+
+        function renderDashboardCharts() {
+            // Verifica se o usuário tem permissão
+            if(currentUser.role !== 'direcao') return;
+
+            // 1. Gráfico de Notas (Média simulada da escola)
+            const ctxNotas = document.getElementById('chart-notas');
+            if(chartNotasInstance) chartNotasInstance.destroy();
+            
+            chartNotasInstance = new Chart(ctxNotas, {
+                type: 'bar',
+                data: {
+                    labels: ['Port', 'Mat', 'Hist', 'Geog', 'Ciên', 'Art', 'Ed.Fís'],
+                    datasets: [{
+                        label: 'Média Escolar',
+                        data: [7.8, 6.5, 8.2, 7.9, 8.5, 9.1, 9.8], 
+                        backgroundColor: '#0a9396',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 10 } }
+                }
+            });
+
+            // 2. Gráfico de Frequência Global
+            const ctxFreq = document.getElementById('chart-frequencia');
+            if(chartFreqInstance) chartFreqInstance.destroy();
+
+            let safe = 0, attention = 0, critical = 0;
+            dbStudents.forEach(s => {
+                let f = calcularFrequenciaGeral(s);
+                if(f >= 85) safe++;
+                else if(f >= 75) attention++;
+                else critical++;
+            });
+
+            chartFreqInstance = new Chart(ctxFreq, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Seguro (>85%)', 'Atenção (75-84%)', 'Crítico (<75%)'],
+                    datasets: [{
+                        data: [safe, attention, critical],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true } } }
+                }
+            });
+        }
+
+        // Sistema de Busca Compartilhada (Equipe Multi e Direção)
+        function setClassFilter(filter) {
+            currentClassFilter = filter;
+            document.querySelectorAll('.class-filter-btn').forEach(btn => {
+                btn.className = "class-filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-lg text-sm font-bold transition hover:bg-gray-50 whitespace-nowrap";
+            });
+            document.getElementById('filter-btn-' + filter).className = "class-filter-btn px-4 py-2 bg-school-primary text-white rounded-lg text-sm font-bold transition shadow-sm whitespace-nowrap";
+            loadSharedSearch();
+        }
+
+        function loadSharedSearch() {
+            const grid = document.getElementById('global-students-grid');
+            grid.innerHTML = '';
+            
+            let alunos = dbStudents;
+            // Filtro por Aba de Turma
+            if(currentClassFilter !== 'all') {
+                alunos = alunos.filter(a => a.classId === currentClassFilter);
+            }
+
+            // Filtro por Texto Digitado
+            const searchInput = document.getElementById('global-search-input').value.toLowerCase();
+            if(searchInput) {
+                alunos = alunos.filter(a => a.name.toLowerCase().includes(searchInput));
+            }
+
+            alunos.sort((a,b) => a.name.localeCompare(b.name)).forEach(aluno => {
+                const freq = calcularFrequenciaGeral(aluno);
+                const isCritical = freq < 75;
+                const borderClass = isCritical ? 'border-l-red-500' : 'border-l-school-secondary';
+
+                const card = document.createElement('div');
+                card.className = `bg-white p-5 rounded-xl shadow-sm border border-gray-200 border-l-4 ${borderClass} hover:shadow-md transition cursor-pointer flex items-center gap-4`;
+                card.onclick = () => openStudentDetail(aluno.id);
+                card.innerHTML = `
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 font-bold flex-shrink-0 text-lg">
+                        ${aluno.name.charAt(0)}
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <h3 class="font-bold text-gray-800 text-sm truncate">${aluno.name}</h3>
+                        <p class="text-xs text-gray-500 mb-1">Turma: ${mockClasses[aluno.classId].name} | RA: ${aluno.ra}</p>
+                        <span class="text-[10px] px-2 py-0.5 rounded font-bold ${isCritical ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}">
+                            Freq: ${freq}% ${isCritical ? '⚠️' : ''}
+                        </span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        // Listener para o input de busca ao digitar
+        document.getElementById('global-search-input')?.addEventListener('input', loadSharedSearch);
+
+        // Alertas Inteligentes da Direção (Painel de Mapeamento de Risco)
+        function loadDirAlertas() {
+            const gridFaltas = document.getElementById('grid-alertas-faltas');
+            const gridNotas = document.getElementById('grid-alertas-notas');
+            const vazioFaltas = document.getElementById('vazio-faltas');
+            const vazioNotas = document.getElementById('vazio-notas');
+            
+            gridFaltas.innerHTML = ''; gridNotas.innerHTML = '';
+            let countFaltas = 0; let countNotas = 0;
+
+            dbStudents.forEach(aluno => {
+                const freq = calcularFrequenciaGeral(aluno);
+                // Verifica Risco de Frequência
+                if (freq < 75) {
+                    countFaltas++;
+                    gridFaltas.innerHTML += `
+                        <div class="flex justify-between items-center bg-red-50 p-3 rounded-lg border border-red-100 cursor-pointer hover:bg-red-100 transition" onclick="openStudentDetail('${aluno.id}')">
+                            <div>
+                                <p class="font-bold text-red-900 text-sm">${aluno.name}</p>
+                                <p class="text-xs text-red-700">${mockClasses[aluno.classId].name}</p>
+                            </div>
+                            <span class="bg-white text-red-600 px-2 py-1 rounded text-xs font-bold border border-red-200">Freq: ${freq}%</span>
+                        </div>
+                    `;
+                }
+
+                // Verifica Risco de Notas (Média Parcial < 6.0)
+                if (dbGrades[aluno.id]) {
+                    let isMediaBaixa = false;
+                    for (let disc in dbGrades[aluno.id]) {
+                        const n = dbGrades[aluno.id][disc];
+                        let sum = 0, qtd = 0;
+                        if(n.n1 !== '') { sum += n.n1; qtd++; }
+                        if(n.n2 !== '') { sum += n.n2; qtd++; }
+                        if(n.n3 !== '') { sum += n.n3; qtd++; }
+                        if(n.n4 !== '') { sum += n.n4; qtd++; }
+                        
+                        if (qtd > 0 && (sum / qtd) < 6.0) {
+                            isMediaBaixa = true;
+                            break;
+                        }
+                    }
+                    if (isMediaBaixa) {
+                        countNotas++;
+                        gridNotas.innerHTML += `
+                            <div class="flex justify-between items-center bg-orange-50 p-3 rounded-lg border border-orange-100 cursor-pointer hover:bg-orange-100 transition" onclick="openStudentDetail('${aluno.id}')">
+                                <div>
+                                    <p class="font-bold text-orange-900 text-sm">${aluno.name}</p>
+                                    <p class="text-xs text-orange-700">${mockClasses[aluno.classId].name}</p>
+                                </div>
+                                <span class="bg-white text-orange-600 px-2 py-1 rounded text-[10px] font-bold border border-orange-200"><i class="fas fa-arrow-down mr-1"></i> Risco de Média</span>
+                            </div>
+                        `;
+                    }
+                }
+            });
+
+            if (countFaltas === 0) { vazioFaltas.classList.remove('hidden'); } else { vazioFaltas.classList.add('hidden'); }
+            if (countNotas === 0) { vazioNotas.classList.remove('hidden'); } else { vazioNotas.classList.add('hidden'); }
         }
 
     </script>
