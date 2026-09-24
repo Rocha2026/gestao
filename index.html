@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Escolar | E.M.E.F Maria Luiza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- html2pdf para geração de PDFs direto no navegador -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Cores Institucionais Customizadas */
+        .bg-school-primary { background-color: #005f73; }
+        .text-school-primary { color: #005f73; }
+        .border-school-primary { border-color: #005f73; }
+        .bg-school-secondary { background-color: #0a9396; }
+        
+        .role-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .role-dir { background-color: #4f46e5; color: white; }
+        .role-prof { background-color: #0ea5e9; color: white; }
+        .role-multi { background-color: #9333ea; color: white; }
+        
+        /* Ocultar elementos baseados no cargo logado */
+        body[data-role="professor"] .only-dir, body[data-role="professor"] .only-multi { display: none !important; }
+        body[data-role="direcao"] .only-prof, body[data-role="direcao"] .only-multi { display: none !important; }
+        body[data-role="multidisciplinar"] .only-prof, body[data-role="multidisciplinar"] .only-dir { display: none !important; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col" data-role="none">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <!-- AUTH VIEW -->
+    <div id="auth-view" class="flex-grow flex items-center justify-center p-4 bg-gradient-to-br from-[#005f73] to-[#0a9396]">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 fade-in relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-[#ee9b00]"></div>
+            <div class="text-center mb-8 mt-2">
+                <div class="w-20 h-20 bg-school-primary rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg border-4 border-white outline outline-2 outline-gray-100">
+                    <i class="fas fa-school text-3xl text-white"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">E.M.E.F Maria Luiza</h1>
+                <p class="text-gray-500 text-sm mt-1">Portal Integrado de Gestão Escolar</p>
+            </div>
+
+            <form id="auth-form" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">E-mail Institucional</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="email" id="email-input" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0a9396] focus:border-[#0a9396] transition bg-gray-50" placeholder="nome.prof@educacao...">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="password" id="password-input" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#0a9396] focus:border-[#0a9396] transition bg-gray-50" placeholder="••••••••">
+                    </div>
+                </div>
+                <button type="submit" id="auth-submit-btn" class="w-full bg-school-primary hover:bg-[#004d5e] text-white font-bold py-3 rounded-xl transition duration-200 shadow-md flex justify-center items-center gap-2 text-lg">
+                    Acessar Portal <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <div class="mt-6 bg-gray-50 p-4 rounded-xl text-xs text-gray-600 border border-gray-100">
+                <strong>Dica de Acesso:</strong><br>
+                Direção: marcos.prof@...<br>
+                Professor: patricia.prof@...<br>
+                Multi: psicologia.prof@...<br>
+                (Senha padrão: teste123)
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP VIEW -->
+    <div id="app-view" class="hidden flex-grow flex flex-col md:flex-row min-h-screen">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-school-primary text-white border-r border-[#004d5e] flex flex-col shadow-xl z-20 relative">
+            <div class="p-6 border-b border-[#004d5e] flex items-center justify-between md:justify-center">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-school text-2xl text-[#ee9b00]"></i>
+                    <div>
+                        <span class="font-bold text-lg leading-tight block">EduPortal</span>
+                        <span class="text-[10px] text-gray-300 uppercase tracking-widest block">Maria Luiza</span>
+                    </div>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-white hover:text-[#ee9b00]">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- User Info Sidebar -->
+            <div class="p-4 border-b border-[#004d5e] bg-[#004d5e]/50 hidden md:flex items-center gap-3" id="sidebar-user-info">
+                <div class="w-12 h-12 rounded-full bg-white text-school-primary flex items-center justify-center font-bold text-xl shadow-inner" id="user-avatar-initial">U</div>
+                <div class="overflow-hidden flex-grow">
+                    <p class="text-sm font-bold truncate" id="user-display-name">Usuário</p>
+                    <span id="user-role-badge" class="role-badge role-prof inline-block mt-0.5">Professor</span>
+                </div>
+            </div>
+
+            <nav id="sidebar-nav" class="flex-grow p-4 space-y-1 hidden md:block overflow-y-auto custom-scrollbar">
+                
+                <!-- Menu: Professor -->
+                <div class="menu-section only-prof mb-6">
+                    <p class="text-xs uppercase text-gray-400 font-bold mb-2 px-2 tracking-wider">Sala de Aula</p>
+                    <button onclick="navigate('prof-turmas')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="prof-turmas">
+                        <i class="fas fa-users w-5 text-center"></i> Minha Turma
+                    </button>
+                    <button onclick="navigate('prof-chamada')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="prof-chamada">
+                        <i class="fas fa-clipboard-list w-5 text-center"></i> Lista de Chamada
+                    </button>
+                    <button onclick="navigate('prof-notas')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="prof-notas">
+                        <i class="fas fa-star w-5 text-center"></i> Lançamento de Notas
+                    </button>
+                </div>
+
+                <!-- Menu: Direção -->
+                <div class="menu-section only-dir mb-6">
+                    <p class="text-xs uppercase text-gray-400 font-bold mb-2 px-2 tracking-wider">Gestão</p>
+                    <button onclick="navigate('dir-dashboard')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="dir-dashboard">
+                        <i class="fas fa-chart-pie w-5 text-center"></i> Visão Geral
+                    </button>
+                    <button onclick="navigate('dir-alertas')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="dir-alertas">
+                        <i class="fas fa-bell w-5 text-center"></i> Alertas de Frequência
+                    </button>
+                    <button onclick="navigate('shared-student-search')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="shared-student-search">
+                        <i class="fas fa-search w-5 text-center"></i> Buscar Aluno
+                    </button>
+                </div>
+
+                <!-- Menu: Multidisciplinar -->
+                <div class="menu-section only-multi mb-6">
+                    <p class="text-xs uppercase text-gray-400 font-bold mb-2 px-2 tracking-wider">Atendimento Especializado</p>
+                    <button onclick="navigate('shared-student-search')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="shared-student-search">
+                        <i class="fas fa-user-md w-5 text-center"></i> Buscar Paciente/Aluno
+                    </button>
+                    <button onclick="navigate('multi-casos')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="multi-casos">
+                        <i class="fas fa-lock w-5 text-center"></i> Casos em Acompanhamento
+                    </button>
+                </div>
+
+            </nav>
+
+            <div class="p-4 border-t border-[#004d5e] hidden md:block" id="sidebar-footer">
+                <button id="logout-btn" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition text-sm font-bold shadow-md">
+                    <i class="fas fa-power-off"></i> Encerrar Sessão
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-grow bg-gray-100 relative overflow-y-auto no-scrollbar h-screen pb-20">
+            
+            <!-- VIEW: BUSCA COMPARTILHADA (Direção e Multi) -->
+            <div id="view-shared-student-search" class="app-section hidden p-6 md:p-8 max-w-6xl mx-auto fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Acervo Geral de Alunos</h2>
+                    <p class="text-gray-500 text-sm mt-1">Busque alunos em todas as turmas para acessar prontuários e históricos.</p>
+                </div>
+                
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex gap-4 items-center">
+                    <div class="relative flex-grow">
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="global-search-input" placeholder="Digite o nome do aluno..." class="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-lg focus:ring-2 focus:ring-school-secondary focus:bg-white transition text-lg">
+                    </div>
+                </div>
+
+                <div id="global-students-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards injetados via JS -->
+                </div>
+            </div>
+
+            <!-- VIEW: PROFESSOR - MINHA TURMA -->
+            <div id="view-prof-turmas" class="app-section hidden p-6 md:p-8 max-w-6xl mx-auto fade-in">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Minha Turma: <span id="prof-class-name" class="text-school-primary">Carregando...</span></h2>
+                        <p class="text-gray-500 text-sm mt-1">Visão geral dos seus alunos.</p>
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 font-bold text-gray-700">
+                        <i class="fas fa-users text-school-secondary mr-2"></i> <span id="prof-class-count">0</span> Alunos
+                    </div>
+                </div>
+                
+                <div id="prof-students-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Cards injetados via JS -->
+                </div>
+            </div>
+
+            <!-- VIEW: PROFESSOR - LISTA DE CHAMADA -->
+            <div id="view-prof-chamada" class="app-section hidden p-6 md:p-8 max-w-5xl mx-auto fade-in">
+                <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Lista de Chamada</h2>
+                        <p class="text-gray-500 text-sm mt-1">Controle de frequência automatizado.</p>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-gray-200">
+                        <label class="font-medium text-sm text-gray-600 pl-2">Data da Aula:</label>
+                        <input type="date" id="chamada-date" class="border border-gray-300 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-school-secondary outline-none text-sm font-medium">
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="flex justify-between p-4 bg-gray-50 border-b border-gray-200">
+                        <button onclick="marcarTodosChamada('presente')" class="text-sm font-medium text-green-700 hover:text-green-800 bg-green-100 px-3 py-1.5 rounded-md transition"><i class="fas fa-check-double mr-1"></i> Todos Presentes</button>
+                        <span class="text-sm text-gray-500 font-medium self-center" id="chamada-stats">0 presentes / 0 ausentes</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-white border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500">
+                                    <th class="p-4 font-bold">Aluno</th>
+                                    <th class="p-4 font-bold text-center">Status Hoje</th>
+                                    <th class="p-4 font-bold text-center">% Frequência Geral</th>
+                                </tr>
+                            </thead>
+                            <tbody id="chamada-tbody" class="divide-y divide-gray-100">
+                                <!-- Linhas via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-4 bg-gray-50 border-t border-gray-200 text-right">
+                        <button onclick="salvarChamada()" class="bg-school-primary hover:bg-[#004d5e] text-white px-6 py-2.5 rounded-lg font-bold shadow-sm transition"><i class="fas fa-save mr-2"></i> Salvar Chamada</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: PROFESSOR - NOTAS -->
+            <div id="view-prof-notas" class="app-section hidden p-6 md:p-8 max-w-6xl mx-auto fade-in">
+                 <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Lançamento de Notas</h2>
+                        <p class="text-gray-500 text-sm mt-1">A média anual é calculada automaticamente (N1+N2+N3+N4 / 4).</p>
+                    </div>
+                    <select id="notas-disciplina" class="bg-white border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-school-secondary focus:border-school-secondary block p-2.5 shadow-sm font-medium">
+                        <option value="Portugues">Língua Portuguesa</option>
+                        <option value="Matematica">Matemática</option>
+                        <option value="Historia">História</option>
+                        <option value="Geografia">Geografia</option>
+                        <option value="Ciencias">Ciências</option>
+                        <option value="Artes">Artes</option>
+                        <option value="EducacaoFisica">Educação Física</option>
+                    </select>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-600">
+                                    <th class="p-4 font-bold sticky left-0 bg-gray-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Aluno</th>
+                                    <th class="p-4 font-bold text-center w-24">1º Bim</th>
+                                    <th class="p-4 font-bold text-center w-24">2º Bim</th>
+                                    <th class="p-4 font-bold text-center w-24">3º Bim</th>
+                                    <th class="p-4 font-bold text-center w-24">4º Bim</th>
+                                    <th class="p-4 font-bold text-center w-32 bg-blue-50">Média Final</th>
+                                </tr>
+                            </thead>
+                            <tbody id="notas-tbody" class="divide-y divide-gray-100">
+                                <!-- Linhas via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                        <span class="text-xs text-gray-500"><i class="fas fa-info-circle"></i> As alterações são salvas automaticamente ao digitar. Média para aprovação: 6.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: DIREÇÃO - DASHBOARD -->
+            <div id="view-dir-dashboard" class="app-section hidden p-6 md:p-8 max-w-7xl mx-auto fade-in">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Visão Geral da Escola</h2>
+                
+                <!-- KPIs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 border-l-4 border-l-blue-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Total de Alunos (5º Ano)</p>
+                                <p class="text-3xl font-bold text-gray-800" id="dir-total-alunos">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-500"><i class="fas fa-user-graduate text-xl"></i></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 border-l-4 border-l-green-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Frequência Média Escolar</p>
+                                <p class="text-3xl font-bold text-gray-800" id="dir-media-freq">0%</p>
+                            </div>
+                            <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-500"><i class="fas fa-chart-line text-xl"></i></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 border-l-4 border-l-red-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Alertas Críticos (Faltas/Prontuário)</p>
+                                <p class="text-3xl font-bold text-red-600" id="dir-total-alertas">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-500"><i class="fas fa-exclamation-triangle text-xl"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Equipe -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Nossa Equipe</h3>
+                        <div class="space-y-4" id="dir-equipe-lista">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </div>
+                    <!-- Turmas -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Desempenho por Turma</h3>
+                        <div class="space-y-4" id="dir-turmas-lista">
+                             <!-- Injetado via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: PERFIL DETALHADO DO ALUNO (Comum para Prof, Dir, Multi) -->
+            <div id="view-student-detail" class="app-section hidden p-6 md:p-8 max-w-5xl mx-auto fade-in pb-24">
+                <button onclick="voltarParaListaAnterior()" class="text-gray-500 hover:text-school-primary transition flex items-center gap-2 mb-6 font-medium text-sm bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm w-fit">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+
+                <!-- Cabeçalho do Aluno -->
+                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6 md:p-8 mb-6 flex flex-col md:flex-row gap-6 items-start md:items-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-[#005f73]/5 rounded-bl-[100px] -z-10"></div>
+                    
+                    <div class="w-28 h-28 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 text-gray-400 border-4 border-white shadow-lg overflow-hidden">
+                        <img src="" id="det-student-photo" class="w-full h-full object-cover hidden" alt="Foto">
+                        <i class="fas fa-user text-5xl" id="det-student-icon"></i>
+                    </div>
+                    
+                    <div class="flex-grow">
+                        <h2 id="det-student-name" class="text-3xl font-bold text-gray-800 mb-2">Nome do Aluno</h2>
+                        <div class="flex flex-wrap gap-3 text-sm font-medium">
+                            <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200 flex items-center gap-1"><i class="fas fa-chalkboard"></i> <span id="det-student-class">Turma</span></span>
+                            <span class="bg-purple-50 text-purple-700 px-3 py-1 rounded-full border border-purple-200 flex items-center gap-1"><i class="fas fa-id-badge"></i> RA: <span id="det-student-id">000</span></span>
+                            <span class="bg-green-50 text-green-700 px-3 py-1 rounded-full border border-green-200 flex items-center gap-1"><i class="fas fa-check-circle"></i> Freq: <span id="det-student-freq">100%</span></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Ações Rápidas (Apenas Professor/Direção) -->
+                    <div class="flex flex-col gap-2 min-w-[140px] only-prof only-dir">
+                        <button onclick="gerarPDF('boletim')" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition flex items-center gap-2 justify-center">
+                            <i class="fas fa-file-pdf text-red-500"></i> Boletim
+                        </button>
+                        <button onclick="gerarPDF('prontuario')" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition flex items-center gap-2 justify-center">
+                            <i class="fas fa-book-medical text-school-primary"></i> Relatório
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Formulário de Prontuário -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sticky top-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2"><i class="fas fa-plus-circle text-school-secondary mr-1"></i> Novo Registro</h3>
+                            
+                            <form id="record-form" class="space-y-4">
+                                <input type="hidden" id="record-student-id">
+                                
+                                <div class="only-prof">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">Observação Pedagógica</span>
+                                    <input type="hidden" id="record-type-prof" value="pedagogico">
+                                </div>
+                                
+                                <div class="only-multi">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Intervenção</label>
+                                    <select id="record-type-multi" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-sm font-medium">
+                                        <option value="psicologia">Psicológica</option>
+                                        <option value="fonoaudiologia">Fonoaudiológica</option>
+                                        <option value="assistencia">Assistência Social</option>
+                                        <option value="psicopedagogia">Psicopedagógica</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Descrição Detalhada</label>
+                                    <textarea id="record-content" required rows="6" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-secondary outline-none resize-none text-sm" placeholder="Descreva a ocorrência, observação ou intervenção..."></textarea>
+                                </div>
+
+                                <!-- Sigilo (Apenas Multidisciplinar) -->
+                                <div class="only-multi flex items-center gap-2 p-3 bg-red-50 rounded-lg border border-red-100">
+                                    <input type="checkbox" id="record-confidential" class="w-4 h-4 text-red-600 rounded focus:ring-red-500 cursor-pointer">
+                                    <label for="record-confidential" class="text-sm font-bold text-red-800 cursor-pointer flex-grow">Marcar como Sigiloso <i class="fas fa-lock ml-1"></i></label>
+                                </div>
+                                <p class="text-[10px] text-gray-500 only-multi">Registros sigilosos ficam ocultos para professores, visíveis apenas para Equipe Multi e Direção.</p>
+
+                                <button type="submit" id="save-record-btn" class="w-full bg-school-secondary hover:bg-[#087f82] text-white font-bold py-3 rounded-xl transition shadow-md flex justify-center items-center gap-2">
+                                    Salvar no Histórico
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Linha do Tempo -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 h-full min-h-[500px]">
+                            <h3 class="text-lg font-bold text-gray-800 mb-6 border-b pb-2 flex items-center justify-between">
+                                <span><i class="fas fa-history text-gray-400 mr-2"></i> Prontuário / Histórico</span>
+                                <span id="record-count" class="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full font-bold border border-gray-200">0 registros</span>
+                            </h3>
+                            
+                            <div id="records-timeline" class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-gray-200 before:via-gray-300 before:to-transparent pt-2 pb-10">
+                                <!-- Injetado via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTAINER OCULTO PARA GERAÇÃO DE PDF -->
+            <div id="pdf-template-container" class="hidden fixed -z-50 top-0 left-0 w-[800px] bg-white text-black p-10 print-friendly">
+                <!-- Preenchido via JS antes de gerar o PDF -->
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // ==========================================
+        // BANCO DE DADOS EM MEMÓRIA (MOCK DATA)
+        // Garante funcionamento imediato no GitHub Pages
+        // ==========================================
+        
+        // 1. Equipe Escolar
+        const mockUsers = [
+            { email: 'marcos.prof@educacao.aguasdesaopedro.sp.gov.br', nome: 'Marcos (Diretor)', role: 'direcao' },
+            { email: 'rosangela.prof@educacao.aguasdesaopedro.sp.gov.br', nome: 'Rosangela (Vice-Diretora)', role: 'direcao' },
+            { email: 'cristinei.prof@educacao.aguasdesaopedro.sp.gov.br', nome: 'Cristinei (Coordenadora)', role: 'direcao' },
+            { email: 'celia.prof@educacao.aguasdesaopedro.sp.gov.br', nome: 'Celia (Coordenadora)', role: 'direcao' },
+            { email: 'patricia.prof@educacao.aguasdesaopedro.sp.gov.br', nome: 'Profa. Patrícia', role: 'professor', turmaId: '5A' },
+            { email: 'catia.prof@educacao.aguasdesaopedro.sp.gov.br', nome: 'Profa. Cátia', role: 'professor', turmaId: '5B' },
+            { email: 'cibelle.prof@educacao.aguasdesaopedro.sp.gov.br', nome: 'Profa. Cibelle', role: 'professor', turmaId: '5C' },
+            { email: 'psicologia.prof@educacao.aguasdesaopedro.sp.gov.br', nome: 'Dra. Silva (Psicóloga)', role: 'multidisciplinar' }
+        ];
+
+        // 2. Turmas
+        const mockClasses = {
+            '5A': { id: '5A', name: '5º Ano A', prof: 'Profa. Patrícia' },
+            '5B': { id: '5B', name: '5º Ano B', prof: 'Profa. Cátia' },
+            '5C': { id: '5C', name: '5º Ano C', prof: 'Profa. Cibelle' }
+        };
+
+        // 3. Alunos (Extraídos do prompt)
+        const nomes5A = ["Alhena Fessel", "Beatris Vitoria", "Carlos Wesley", "Charles Henrique", "Enrico Amorim", "Gabriel Ferreira", "Gabriel Nogueira", "Heitor Rosa", "Helena Mendonça", "José Henrique", "Lucas Henrique", "Luna Hope", "Marina Ferreira", "Miguel Ragazzi", "Pedro Henrique", "Piettro Lang", "Renan Jardim", "Sophia Giglioti", "Vinícius Itipão", "Ana Luiza", "Alicia"];
+        const nomes5B = ["Acauã Munaro", "Ana Clara", "Anna Catharina", "Eduarda Rafaelly", "Eike Pazzine", "Julia Capobianco", "Lara Laurinda", "Larissa Dib", "Leonardo Carvalho", "Lucas Zampieri", "Luigi Santos", "Marcela Weksler", "Maria Valentina", "Melissa Mel", "Pedro Vieira", "Rafaella Munhoz", "Renan Lucas", "Ricardo Augusto", "Ronaldo Bertato", "Sophia Santos", "Vinicius Eiji", "Vinicius Pereira"];
+        const nomes5C = ["Alice Lopes", "Alice Santiago", "Alicia Marques", "Ana Laura", "Caio Lima", "Catarina Varela", "Gabriel Soares", "Gabriela Camargo", "Gael De Araujo", "Heitor Cardoso", "Helena Ye", "Heloisa Barboza", "Isabella Amato", "João Lucas", "Lorenzo Ryu", "Maria Julia", "Melissa Ferrari", "Pedro Custodio", "Pedro Henrique", "Pedro Lucas", "Vinicius Pescara"];
+
+        let dbStudents = [];
+        let dbGrades = {}; // { studentId: { Portugues: {n1, n2, n3, n4}, Matematica: {...} } }
+        let dbAttendance = {}; // { classId_date: { studentId: true/false } }
+        let dbRecords = []; // { id, studentId, text, type, author, date, confidential }
+
+        // Gerador de RA Único
+        function gerarRA(prefix) { return prefix + Math.floor(1000 + Math.random() * 9000); }
+
+        // Inicializar banco em memória
+        function initMockDB() {
+            let idCounter = 1;
+            const createStudentObj = (nome, turma) => {
+                const sId = 'ST' + idCounter++;
+                dbGrades[sId] = {
+                    Portugues: { n1: 8, n2: 7, n3: '', n4: '' },
+                    Matematica: { n1: 6, n2: 8, n3: '', n4: '' }
+                };
+                return { id: sId, name: nome, classId: turma, ra: gerarRA('26'), totalAulas: 100, faltas: Math.floor(Math.random() * 15) };
+            };
+
+            nomes5A.forEach(n => dbStudents.push(createStudentObj(n, '5A')));
+            nomes5B.forEach(n => dbStudents.push(createStudentObj(n, '5B')));
+            nomes5C.forEach(n => dbStudents.push(createStudentObj(n, '5C')));
+            
+            // Adicionar alguns prontuários falsos para teste
+            dbRecords.push({
+                id: 'R1', studentId: dbStudents[0].id, type: 'pedagogico', author: 'Profa. Patrícia', role: 'professor',
+                date: new Date(Date.now() - 86400000).toISOString(), text: 'Aluno apresentou grande melhora na leitura durante a roda de histórias.', confidential: false
+            });
+            dbRecords.push({
+                id: 'R2', studentId: dbStudents[0].id, type: 'psicologia', author: 'Dra. Silva', role: 'multidisciplinar',
+                date: new Date().toISOString(), text: 'Sessão de acompanhamento. Aluno relatou dificuldades familiares.', confidential: true
+            });
+        }
+        initMockDB();
+
+        // ==========================================
+        // ESTADO GLOBAL DA APLICAÇÃO
+        // ==========================================
+        let currentUser = null;
+        let currentView = null;
+        let lastListView = null; // Para o botão voltar
+        let activeStudentId = null;
+
+        
+        // --- Notificações ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            let bgClass = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-gray-800';
+            let icon = type === 'success' ? 'fa-check' : type === 'error' ? 'fa-exclamation' : 'fa-info';
+            
+            toast.className = `${bgClass} text-white px-4 py-3 rounded-lg shadow-xl flex items-center gap-3 transform transition-all duration-300 translate-x-full opacity-0 z-[100]`;
+            toast.innerHTML = `<i class="fas ${icon}"></i><p class="text-sm font-medium">${message}</p>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-x-full', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // --- Navegação SPA ---
+        function navigate(viewId, pushHistory = true) {
+            // Oculta todas
+            document.querySelectorAll('.app-section').forEach(el => el.classList.add('hidden'));
+            
+            // Remove active state do menu
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-white/20', 'border-l-4', 'border-[#ee9b00]', 'font-bold');
+            });
+
+            // Mostra a desejada
+            const targetView = document.getElementById(`view-${viewId}`);
+            if (targetView) targetView.classList.remove('hidden');
+
+            // Marca menu como ativo se existir
+            const navItem = document.querySelector(`[data-target="${viewId}"]`);
+            if (navItem) navItem.classList.add('bg-white/20', 'border-l-4', 'border-[#ee9b00]', 'font-bold');
+
+            // Fecha menu mobile
+            document.getElementById('sidebar-nav').classList.add('hidden');
+            document.getElementById('sidebar-footer').classList.add('hidden');
+
+            // Lógica Específica por View ao carregar
+            if (viewId === 'prof-turmas') loadProfTurma();
+            if (viewId === 'prof-chamada') loadProfChamada();
+            if (viewId === 'prof-notas') loadProfNotas();
+            if (viewId === 'dir-dashboard') loadDirDashboard();
+            if (viewId === 'shared-student-search') loadSharedSearch();
+
+            if (pushHistory && viewId !== 'student-detail') {
+                lastListView = viewId;
+            }
+            window.scrollTo(0,0);
+        }
+
+        function voltarParaListaAnterior() {
+            navigate(lastListView || (currentUser.role === 'professor' ? 'prof-turmas' : 'shared-student-search'), false);
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            const nav = document.getElementById('sidebar-nav');
+            const footer = document.getElementById('sidebar-footer');
+            nav.classList.toggle('hidden'); nav.classList.toggle('block');
+            footer.classList.toggle('hidden'); footer.classList.toggle('block');
+        });
+
+        // --- Autenticação Mock ---
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email-input').value.toLowerCase().trim();
+            const password = document.getElementById('password-input').value;
+            const btn = document.getElementById('auth-submit-btn');
+
+            if(password !== 'teste123') {
+                showToast('Senha incorreta! Use: teste123', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Autenticando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const user = mockUsers.find(u => u.email === email);
+                if (user) {
+                    currentUser = user;
+                    // Aplica Role na UI
+                    document.body.setAttribute('data-role', user.role);
+                    document.getElementById('user-display-name').textContent = user.nome;
+                    document.getElementById('user-avatar-initial').textContent = user.nome.charAt(0).toUpperCase();
+                    
+                    const badge = document.getElementById('user-role-badge');
+                    badge.textContent = user.role === 'direcao' ? 'Gestão' : user.role === 'professor' ? 'Professor(a)' : 'Equipe Multi';
+                    badge.className = `role-badge ${user.role === 'direcao' ? 'role-dir' : user.role === 'professor' ? 'role-prof' : 'role-multi'} inline-block mt-0.5`;
+
+                    document.getElementById('auth-view').classList.add('hidden');
+                    document.getElementById('app-view').classList.remove('hidden');
+
+                    showToast(`Bem-vindo(a), ${user.nome.split(' ')[0]}!`, 'success');
+                    
+                    // Rota inicial por cargo
+                    if (user.role === 'professor') navigate('prof-turmas');
+                    else if (user.role === 'direcao') navigate('dir-dashboard');
+                    else navigate('shared-student-search');
+
+                } else {
+                    showToast('E-mail não encontrado na base de dados.', 'error');
+                }
+                btn.innerHTML = 'Acessar Portal <i class="fas fa-arrow-right"></i>';
+                btn.disabled = false;
+            }, 800);
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            currentUser = null;
+            document.body.setAttribute('data-role', 'none');
+            document.getElementById('app-view').classList.add('hidden');
+            document.getElementById('auth-view').classList.remove('hidden');
+            document.getElementById('auth-form').reset();
+            showToast('Sessão encerrada.', 'info');
+        });
+
+        // --- PROFESSOR: MINHA TURMA ---
+        function loadProfTurma() {
+            if (currentUser.role !== 'professor') return;
+            const turmaInfo = mockClasses[currentUser.turmaId];
+            document.getElementById('prof-class-name').textContent = turmaInfo.name;
+            
+            const alunos = dbStudents.filter(s => s.classId === currentUser.turmaId).sort((a,b) => a.name.localeCompare(b.name));
+            document.getElementById('prof-class-count').textContent = alunos.length;
+
+            const grid = document.getElementById('prof-students-grid');
+            grid.innerHTML = '';
+            
+            alunos.forEach(aluno => {
+                const card = document.createElement('div');
+                const freq = calcularFrequenciaGeral(aluno);
+                let colorBorder = freq >= 75 ? 'border-l-green-500' : 'border-l-red-500';
+
+                card.className = `bg-white p-4 rounded-xl shadow-sm border border-gray-100 border-l-4 ${colorBorder} hover:shadow-md transition cursor-pointer flex items-center gap-4`;
+                card.onclick = () => openStudentDetail(aluno.id);
+                card.innerHTML = `
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 font-bold flex-shrink-0">
+                        ${aluno.name.charAt(0)}
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <h3 class="font-bold text-gray-800 text-sm truncate">${aluno.name}</h3>
+                        <p class="text-xs text-gray-500">RA: ${aluno.ra} | Freq: ${freq}%</p>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-300 text-sm"></i>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- PROFESSOR: LISTA DE CHAMADA ---
+        function loadProfChamada() {
+            if (currentUser.role !== 'professor') return;
+            const inputDate = document.getElementById('chamada-date');
+            if(!inputDate.value) inputDate.valueAsDate = new Date(); // Hoje
+
+            inputDate.onchange = renderChamadaTabela;
+            renderChamadaTabela();
+        }
+
+        function renderChamadaTabela() {
+            const date = document.getElementById('chamada-date').value;
+            const key = `${currentUser.turmaId}_${date}`;
+            const registrosHoje = dbAttendance[key] || {};
+            
+            const alunos = dbStudents.filter(s => s.classId === currentUser.turmaId).sort((a,b) => a.name.localeCompare(b.name));
+            const tbody = document.getElementById('chamada-tbody');
+            tbody.innerHTML = '';
+
+            let pres = 0; let aus = 0;
+
+            alunos.forEach(aluno => {
+                const isPresent = registrosHoje[aluno.id] !== false; // Padrão é presente se não marcado
+                if(registrosHoje[aluno.id] === undefined) registrosHoje[aluno.id] = true; // Inicializa memória
+                
+                if(isPresent) pres++; else aus++;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition";
+                tr.innerHTML = `
+                    <td class="p-3 md:p-4 font-medium text-gray-800 text-sm">${aluno.name}</td>
+                    <td class="p-3 md:p-4 text-center">
+                        <div class="inline-flex bg-gray-100 rounded-lg p-1">
+                            <button onclick="toggleChamada('${aluno.id}', true, this)" class="px-3 py-1 rounded-md text-xs font-bold transition ${isPresent ? 'bg-green-500 text-white shadow' : 'text-gray-500 hover:bg-gray-200'}">P</button>
+                            <button onclick="toggleChamada('${aluno.id}', false, this)" class="px-3 py-1 rounded-md text-xs font-bold transition ${!isPresent ? 'bg-red-500 text-white shadow' : 'text-gray-500 hover:bg-gray-200'}">F</button>
+                        </div>
+                    </td>
+                    <td class="p-3 md:p-4 text-center text-sm font-bold ${calcularFrequenciaGeral(aluno) >= 75 ? 'text-green-600' : 'text-red-600'}">
+                        ${calcularFrequenciaGeral(aluno)}%
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('chamada-stats').textContent = `${pres} presentes / ${aus} ausentes`;
+            // Salva estado invisivel na memoria temp
+            dbAttendance[key] = registrosHoje;
+        }
+
+        window.toggleChamada = function(studentId, isPresent, btnElement) {
+            const date = document.getElementById('chamada-date').value;
+            const key = `${currentUser.turmaId}_${date}`;
+            if(!dbAttendance[key]) dbAttendance[key] = {};
+            dbAttendance[key][studentId] = isPresent;
+            
+            // Atualiza UI direto
+            const parent = btnElement.parentElement;
+            const btnP = parent.children[0]; const btnF = parent.children[1];
+            
+            if(isPresent) {
+                btnP.className = 'px-3 py-1 rounded-md text-xs font-bold transition bg-green-500 text-white shadow';
+                btnF.className = 'px-3 py-1 rounded-md text-xs font-bold transition text-gray-500 hover:bg-gray-200';
+            } else {
+                btnF.className = 'px-3 py-1 rounded-md text-xs font-bold transition bg-red-500 text-white shadow';
+                btnP.className = 'px-3 py-1 rounded-md text-xs font-bold transition text-gray-500 hover:bg-gray-200';
+            }
+            updateChamadaStats();
+        }
+
+        window.marcarTodosChamada = function(status) {
+            const isPresent = status === 'presente';
+            const date = document.getElementById('chamada-date').value;
+            const key = `${currentUser.turmaId}_${date}`;
+            const alunos = dbStudents.filter(s => s.classId === currentUser.turmaId);
+            alunos.forEach(a => { dbAttendance[key][a.id] = isPresent; });
+            renderChamadaTabela();
+            showToast('Todos marcados como ' + (isPresent ? 'Presente' : 'Falta'), 'info');
+        }
+
+        function updateChamadaStats() {
+            const date = document.getElementById('chamada-date').value;
+            const key = `${currentUser.turmaId}_${date}`;
+            const reg = dbAttendance[key];
+            let p=0, f=0;
+            for(let id in reg) { if(reg[id]) p++; else f++; }
+            document.getElementById('chamada-stats').textContent = `${p} presentes / ${f} ausentes`;
+        }
+
+        window.salvarChamada = function() {
+            // Em uma app real, enviaria dbAttendance[key] pro Firebase aqui.
+            showToast('Lista de chamada salva com sucesso!', 'success');
+        }
+
+        function calcularFrequenciaGeral(aluno) {
+            if(aluno.totalAulas === 0) return 100;
+            return Math.round(((aluno.totalAulas - aluno.faltas) / aluno.totalAulas) * 100);
+        }
+
+        // --- PROFESSOR: NOTAS ---
+        function loadProfNotas() {
+            if (currentUser.role !== 'professor') return;
+            const selDisciplina = document.getElementById('notas-disciplina');
+            selDisciplina.onchange = renderNotasTabela;
+            renderNotasTabela();
+        }
+
+        function renderNotasTabela() {
+            const disciplina = document.getElementById('notas-disciplina').value;
+            const alunos = dbStudents.filter(s => s.classId === currentUser.turmaId).sort((a,b) => a.name.localeCompare(b.name));
+            const tbody = document.getElementById('notas-tbody');
+            tbody.innerHTML = '';
+
+            alunos.forEach(aluno => {
+                if(!dbGrades[aluno.id]) dbGrades[aluno.id] = {};
+                if(!dbGrades[aluno.id][disciplina]) dbGrades[aluno.id][disciplina] = {n1:'', n2:'', n3:'', n4:''};
+                const notas = dbGrades[aluno.id][disciplina];
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition";
+                
+                let mediaHtml = calcularMediaHtml(notas.n1, notas.n2, notas.n3, notas.n4);
+
+                tr.innerHTML = `
+                    <td class="p-3 border-r border-gray-100 font-medium text-gray-800 text-sm sticky left-0 bg-white shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] z-10">${aluno.name}</td>
+                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" min="0" max="10" value="${notas.n1}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n1', this)" class="w-full text-center p-1 border border-gray-200 rounded focus:ring-1 focus:ring-school-secondary outline-none text-sm"></td>
+                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" min="0" max="10" value="${notas.n2}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n2', this)" class="w-full text-center p-1 border border-gray-200 rounded focus:ring-1 focus:ring-school-secondary outline-none text-sm"></td>
+                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" min="0" max="10" value="${notas.n3}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n3', this)" class="w-full text-center p-1 border border-gray-200 rounded focus:ring-1 focus:ring-school-secondary outline-none text-sm"></td>
+                    <td class="p-2 border-r border-gray-100"><input type="number" step="0.1" min="0" max="10" value="${notas.n4}" onchange="updateNota('${aluno.id}', '${disciplina}', 'n4', this)" class="w-full text-center p-1 border border-gray-200 rounded focus:ring-1 focus:ring-school-secondary outline-none text-sm"></td>
+                    <td class="p-3 text-center bg-blue-50/50 font-bold media-cell" id="media-${aluno.id}">${mediaHtml}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.updateNota = function(studentId, disciplina, bim, inputEl) {
+            let val = parseFloat(inputEl.value);
+            if(isNaN(val)) val = '';
+            else if(val < 0) val = 0; else if(val > 10) val = 10;
+            inputEl.value = val;
+
+            dbGrades[studentId][disciplina][bim] = val;
+            
+            const n = dbGrades[studentId][disciplina];
+            document.getElementById(`media-${studentId}`).innerHTML = calcularMediaHtml(n.n1, n.n2, n.n3, n.n4);
+        }
+
+        function calcularMediaHtml(n1, n2, n3, n4) {
+            let soma = 0; let qtd = 0;
+            if(n1 !== '') { soma+=n1; qtd++; }
+            if(n2 !== '') { soma+=n2; qtd++; }
+            if(n3 !== '') { soma+=n3; qtd++; }
+            if(n4 !== '') { soma+=n4; qtd++; }
+            
+            if(qtd === 0) return '<span class="text-gray-400">-</span>';
+            const media = (soma/qtd).toFixed(1);
+            
+            if(qtd === 4) {
+                return media >= 6.0 ? `<span class="text-green-600">${media}</span>` : `<span class="text-red-600">${media}</span>`;
+            }
+            return `<span class="text-gray-500">${media}*</span>`; // Parcial
+        }
+
+        // --- DIREÇÃO: DASHBOARD ---
+        function loadDirDashboard() {
+            if(currentUser.role !== 'direcao') return;
+
+            document.getElementById('dir-total-alunos').textContent = dbStudents.length;
+            
+            let sumFreq = 0;
+            let criticalCount = 0;
+            dbStudents.forEach(s => {
+                let f = calcularFrequenciaGeral(s);
+                sumFreq += f;
+                if (f < 75) criticalCount++;
+            });
+            document.getElementById('dir-media-freq').textContent = Math.round(sumFreq / dbStudents.length) + '%';
+            
+            // Conta registros sigilosos (casos graves Multi)
+            const sigilosos = dbRecords.filter(r => r.confidential).length;
+            document.getElementById('dir-total-alertas').textContent = criticalCount + sigilosos;
+
+            // Renderizar Equipe
+            const eqList = document.getElementById('dir-equipe-lista');
+            eqList.innerHTML = '';
+            mockUsers.forEach(u => {
+                if(u.role === 'direcao') return; // Pula os próprios diretores
+                const icon = u.role === 'professor' ? 'fa-chalkboard-teacher' : 'fa-user-md';
+                const color = u.role === 'professor' ? 'text-blue-500 bg-blue-50' : 'text-purple-500 bg-purple-50';
+                eqList.innerHTML += `
+                    <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-100 transition">
+                        <div class="w-10 h-10 rounded-full ${color} flex items-center justify-center flex-shrink-0"><i class="fas ${icon}"></i></div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-800">${u.nome}</p>
+                            <p class="text-xs text-gray-500">${u.role === 'professor' ? 'Turma ' + u.turmaId : 'Especialista'}</p>
+                        </div>
+                    </div>`;
+            });
+
+            // Renderizar Turmas
+            const tList = document.getElementById('dir-turmas-lista');
+            tList.innerHTML = '';
+            ['5A','5B','5C'].forEach(tid => {
+                const al = dbStudents.filter(s => s.classId === tid);
+                tList.innerHTML += `
+                    <div class="flex items-center justify-between p-3 rounded-lg border border-gray-100 bg-gray-50">
+                        <div>
+                            <p class="text-sm font-bold text-gray-800">${mockClasses[tid].name}</p>
+                            <p class="text-xs text-gray-500">${mockClasses[tid].prof}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-bold text-school-primary">${al.length} alunos</p>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // --- BUSCA GERAL (Direção e Multi) ---
+        function loadSharedSearch() {
+            const input = document.getElementById('global-search-input');
+            input.oninput = (e) => renderGlobalStudents(e.target.value);
+            renderGlobalStudents('');
+        }
+
+        function renderGlobalStudents(filterTerm = '') {
+            const grid = document.getElementById('global-students-grid');
+            grid.innerHTML = '';
+            const term = filterTerm.toLowerCase();
+
+            const filtered = dbStudents.filter(s => s.name.toLowerCase().includes(term));
+            
+            filtered.forEach(aluno => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-school-secondary hover:shadow-md transition cursor-pointer flex items-center gap-4";
+                card.onclick = () => openStudentDetail(aluno.id);
+                card.innerHTML = `
+                    <div class="w-12 h-12 bg-[#005f73]/10 rounded-full flex items-center justify-center text-school-primary font-bold flex-shrink-0 border border-[#005f73]/20">
+                        ${aluno.name.charAt(0)}
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <h3 class="font-bold text-gray-800 text-sm truncate">${aluno.name}</h3>
+                        <div class="flex gap-2 text-[11px] mt-1">
+                            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded">Turma ${aluno.classId}</span>
+                            <span class="bg-gray-100 text-gray-600 px-2 py-0.5 rounded">RA ${aluno.ra}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- DETALHE DO ALUNO (Comum) ---
+        function openStudentDetail(studentId) {
+            activeStudentId = studentId;
+            const aluno = dbStudents.find(s => s.id === studentId);
+            if(!aluno) return;
+
+            document.getElementById('det-student-name').textContent = aluno.name;
+            document.getElementById('det-student-class').textContent = mockClasses[aluno.classId].name;
+            document.getElementById('det-student-id').textContent = aluno.ra;
+            document.getElementById('det-student-freq').textContent = calcularFrequenciaGeral(aluno) + '%';
+            document.getElementById('record-student-id').value = aluno.id;
+
+            renderRecordsTimeline();
+            navigate('student-detail');
+        }
+
+        // Salvar Novo Registro
+        document.getElementById('record-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const sid = document.getElementById('record-student-id').value;
+            const content = document.getElementById('record-content').value;
+            let type = 'pedagogico';
+            let confidential = false;
+
+            if(currentUser.role === 'multidisciplinar') {
+                type = document.getElementById('record-type-multi').value;
+                confidential = document.getElementById('record-confidential').checked;
+            }
+
+            const newRecord = {
+                id: 'R' + Date.now(),
+                studentId: sid,
+                type: type,
+                author: currentUser.nome,
+                role: currentUser.role,
+                date: new Date().toISOString(),
+                text: content,
+                confidential: confidential
+            };
+
+            dbRecords.push(newRecord);
+            document.getElementById('record-form').reset();
+            showToast('Registro salvo no histórico.', 'success');
+            renderRecordsTimeline();
+        });
+
+        function renderRecordsTimeline() {
+            const container = document.getElementById('records-timeline');
+            container.innerHTML = '';
+            
+            // Filtra records do aluno ativo
+            let historico = dbRecords.filter(r => r.studentId === activeStudentId);
+            
+            // Ordena mais novo primeiro
+            historico.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            let displayCount = 0;
+
+            historico.forEach(rec => {
+                // REGRA DE SIGILO: Professores não veem registros confidenciais
+                if (rec.confidential && currentUser.role === 'professor') {
+                    // Mostra apenas um aviso de que existe um registro sigiloso
+                    const item = document.createElement('div');
+                    item.className = "relative z-10 flex items-center gap-4 mb-6";
+                    item.innerHTML = `
+                        <div class="w-10 h-10 rounded-full border-4 border-white bg-gray-200 text-gray-400 flex items-center justify-center shadow-sm z-20 flex-shrink-0 absolute md:static left-0 md:left-auto">
+                            <i class="fas fa-lock text-sm"></i>
+                        </div>
+                        <div class="ml-14 md:ml-0 flex-grow bg-gray-50 border border-dashed border-gray-300 p-4 rounded-xl">
+                            <p class="text-sm text-gray-500 italic"><i class="fas fa-user-md mr-1"></i> Registro sigiloso da Equipe Multidisciplinar. Acesso restrito.</p>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                    displayCount++;
+                    return;
+                }
+
+                // Render normal
+                const isPedag = rec.type === 'pedagogico';
+                const iconBg = isPedag ? 'bg-blue-100' : 'bg-purple-100';
+                const iconColor = isPedag ? 'text-blue-600' : 'text-purple-600';
+                const iconClass = isPedag ? 'fa-chalkboard-teacher' : 'fa-notes-medical';
+                const borderColor = isPedag ? 'border-blue-200' : 'border-purple-200';
+                const dateObj = new Date(rec.date);
+                const dataFormat = dateObj.toLocaleDateString('pt-BR');
+                const horaFormat = dateObj.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+
+                const item = document.createElement('div');
+                item.className = "relative z-10 md:flex items-start md:gap-6 mb-8";
+                
+                let lockBadge = rec.confidential ? `<span class="bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded ml-2 uppercase"><i class="fas fa-lock"></i> Sigilo</span>` : '';
+
+                item.innerHTML = `
+                    <div class="hidden md:flex flex-col items-center flex-shrink-0 w-20 pt-1">
+                        <div class="text-xs font-bold text-gray-600">${dataFormat}</div>
+                        <div class="text-[10px] text-gray-400 uppercase">${horaFormat}</div>
+                    </div>
+                    
+                    <div class="absolute left-0 md:static w-10 h-10 rounded-full border-4 border-white ${iconBg} ${iconColor} flex items-center justify-center shadow-sm z-20 flex-shrink-0">
+                        <i class="fas ${iconClass} text-sm"></i>
+                    </div>
+
+                    <div class="ml-14 md:ml-0 flex-grow bg-white p-5 rounded-xl shadow-sm border ${borderColor}">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">${isPedag ? 'Observação Pedagógica' : 'Atendimento ' + rec.type}</span>
+                                ${lockBadge}
+                            </div>
+                            <div class="text-xs text-gray-400 font-medium">
+                                <i class="fas fa-user-edit mr-1"></i> ${rec.author}
+                            </div>
+                        </div>
+                        <p class="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">${rec.text}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+                displayCount++;
+            });
+
+            if(displayCount === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-gray-400"><i class="fas fa-folder-open text-2xl mb-2 block"></i>Nenhum registro no histórico.</div>`;
+            }
+            document.getElementById('record-count').textContent = displayCount + ' registro(s)';
+        }
+
+        // --- GERADOR DE PDF (BOLETIM / PRONTUÁRIO) ---
+        function gerarPDF(tipo) {
+            if(!activeStudentId) return;
+            const aluno = dbStudents.find(s => s.id === activeStudentId);
+            const container = document.getElementById('pdf-template-container');
+            
+            showToast('Gerando documento PDF, aguarde...', 'info');
+            
+            let htmlContent = `
+                <div style="border-bottom: 2px solid #005f73; padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 50px; height: 50px; background-color: #005f73; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">M</div>
+                    <div>
+                        <h2 style="margin: 0; color: #005f73; font-size: 20px;">E.M.E.F Maria Luiza Fornasier Franzin</h2>
+                        <p style="margin: 0; font-size: 12px; color: #555;">Documento Oficial do Sistema Escolar</p>
+                    </div>
+                </div>
+                <h1 style="text-align: center; font-size: 22px; margin-bottom: 20px;">
+                    ${tipo === 'boletim' ? 'BOLETIM ESCOLAR - 2026' : 'RELATÓRIO / PRONTUÁRIO DO ALUNO'}
+                </h1>
+                <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+                    <strong>Aluno(a):</strong> ${aluno.name} <br>
+                    <strong>Turma:</strong> ${mockClasses[aluno.classId].name} <br>
+                    <strong>RA:</strong> ${aluno.ra} <br>
+                    <strong>Frequência Global:</strong> ${calcularFrequenciaGeral(aluno)}%
+                </div>
+            `;
+
+            if(tipo === 'boletim') {
+                htmlContent += `
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;">
+                        <thead>
+                            <tr style="background-color: #0a9396; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd;">Disciplina</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">1º Bim</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">2º Bim</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">3º Bim</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">4º Bim</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Média Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                const notasAluno = dbGrades[aluno.id] || {};
+                const disciplinasNomes = { Portugues: 'Língua Portuguesa', Matematica: 'Matemática', Historia: 'História', Geografia: 'Geografia', Ciencias: 'Ciências', Artes: 'Artes', EducacaoFisica: 'Educação Física' };
+                
+                for(let disc in disciplinasNomes) {
+                    let n = notasAluno[disc] || {n1:'',n2:'',n3:'',n4:''};
+                    let sum=0, q=0;
+                    if(n.n1!==''){sum+=n.n1; q++;} if(n.n2!==''){sum+=n.n2; q++;} if(n.n3!==''){sum+=n.n3; q++;} if(n.n4!==''){sum+=n.n4; q++;}
+                    let m = q > 0 ? (sum/q).toFixed(1) : '-';
+                    
+                    htmlContent += `
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">${disciplinasNomes[disc]}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${n.n1}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${n.n2}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${n.n3}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${n.n4}</td>
+                            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold; background-color: #f9fafb;">${m}</td>
+                        </tr>
+                    `;
+                }
+                htmlContent += `</tbody></table>`;
+            } 
+            else if (tipo === 'prontuario') {
+                const historico = dbRecords.filter(r => r.studentId === activeStudentId).sort((a,b) => new Date(b.date) - new Date(a.date));
+                
+                if(historico.length === 0) {
+                    htmlContent += `<p style="text-align: center; color: #666; margin-top: 40px;">Nenhum registro encontrado para este aluno.</p>`;
+                } else {
+                    historico.forEach(rec => {
+                        // Respeita a regra de sigilo na exportação
+                        if (rec.confidential && currentUser.role === 'professor') return;
+
+                        const dataStr = new Date(rec.date).toLocaleDateString('pt-BR');
+                        htmlContent += `
+                            <div style="border: 1px solid #ccc; border-radius: 5px; padding: 15px; margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px;">
+                                    <span style="font-weight: bold; color: ${rec.type === 'pedagogico' ? '#2563eb' : '#9333ea'}">${rec.type.toUpperCase()} ${rec.confidential ? '(SIGILOSO)' : ''}</span>
+                                    <span style="font-size: 12px; color: #666;">${dataStr} - Por: ${rec.author}</span>
+                                </div>
+                                <p style="font-size: 13px; line-height: 1.5; color: #333;">${rec.text}</p>
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            container.innerHTML = htmlContent;
+            container.classList.remove('hidden');
+
+            // Configuração do html2pdf
+            const opt = {
+                margin:       10,
+                filename:     `${tipo}_${aluno.name.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Gera e salva
+            html2pdf().set(opt).from(container).save().then(() => {
+                container.classList.add('hidden');
+                container.innerHTML = '';
+            });
+        }
+
+    </script>
+</body>
+</html>
