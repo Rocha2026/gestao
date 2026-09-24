@@ -398,6 +398,49 @@
             </div>
 
             <!-- PERFIL DETALHADO -->
+            <div id="view-student-detail" class="app-section hidden p-6 md:p-8 max-w-7xl mx-auto fade-in">
+                <button onclick="voltarParaListaAnterior()" class="mb-6 flex items-center gap-2 text-school-primary font-bold hover:text-[#004d5e] transition bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Coluna Info -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 text-center">
+                            <div class="w-24 h-24 bg-gray-100 rounded-full mx-auto flex items-center justify-center text-3xl text-gray-400 font-bold mb-4 border-4 border-white shadow">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800" id="det-student-name">Nome do Aluno</h3>
+                            <p class="text-gray-500 text-sm mt-1" id="det-student-class">Turma</p>
+                            
+                            <div class="mt-6 flex justify-around border-t border-gray-100 pt-4">
+                                <div>
+                                    <p class="text-xs text-gray-400 uppercase font-bold">RA</p>
+                                    <p class="font-bold text-gray-700" id="det-student-id">0000</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 uppercase font-bold">Frequência</p>
+                                    <p class="font-bold text-green-600" id="det-student-freq">100%</p>
+                                </div>
+                            </div>
+
+                            <!-- Botão Gerar Prontuário PDF -->
+                            <button onclick="gerarPDF('prontuario')" class="w-full mt-6 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-300 font-bold py-2.5 rounded-lg transition shadow-sm flex justify-center items-center gap-2 text-sm">
+                                <i class="fas fa-file-pdf text-red-500"></i> Exportar Prontuário
+                            </button>
+                        </div>
+
+                        <!-- Formulário Novo Registro -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-2 h-full bg-school-secondary"></div>
+                            <h4 class="font-bold text-gray-800 mb-4 border-b pb-2"><i class="fas fa-plus-circle text-school-secondary mr-2"></i>Novo Registro</h4>
+                            
+                            <form id="record-form" class="space-y-4">
+                                <input type="hidden" id="record-student-id">
+                                
+                                <div class="only-multi">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Atendimento</label>
+                                    <select id="record-type-multi" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-secondary outline-none text-sm font-medium">
                                         <option value="psicologia">Psicológica</option>
                                         <option value="fonoaudiologia">Fonoaudiológica</option>
                                         <option value="assistencia">Assistência Social</option>
