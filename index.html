@@ -122,6 +122,9 @@
                     <button onclick="navigate('prof-notas')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="prof-notas">
                         <i class="fas fa-star w-5 text-center"></i> Lançamento de Notas
                     </button>
+                    <button onclick="navigate('reunioes')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="reunioes">
+                        <i class="fas fa-calendar-check w-5 text-center"></i> Reuniões
+                    </button>
                 </div>
 
                 <!-- Menu: Direção -->
@@ -136,6 +139,9 @@
                     <button onclick="navigate('shared-student-search')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="shared-student-search">
                         <i class="fas fa-search w-5 text-center"></i> Buscar Aluno
                     </button>
+                    <button onclick="navigate('reunioes')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="reunioes">
+                        <i class="fas fa-calendar-check w-5 text-center"></i> Reuniões
+                    </button>
                 </div>
 
                 <!-- Menu: Multidisciplinar -->
@@ -146,6 +152,9 @@
                     </button>
                     <button onclick="navigate('multi-casos')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="multi-casos">
                         <i class="fas fa-lock w-5 text-center"></i> Casos em Acompanhamento
+                    </button>
+                    <button onclick="navigate('reunioes')" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition text-white hover:bg-white/10" data-target="reunioes">
+                        <i class="fas fa-calendar-check w-5 text-center"></i> Agendar Reuniões
                     </button>
                 </div>
 
@@ -167,6 +176,14 @@
                     <p class="text-gray-500 text-sm mt-1">Busque alunos em todas as turmas para acessar prontuários e históricos.</p>
                 </div>
                 
+                <!-- Novas Abas de Turmas -->
+                <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-2">
+                    <button id="filter-btn-all" onclick="setClassFilter('all')" class="class-filter-btn px-4 py-2 bg-school-primary text-white rounded-lg text-sm font-bold transition shadow-sm whitespace-nowrap">Todos</button>
+                    <button id="filter-btn-5A" onclick="setClassFilter('5A')" class="class-filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-lg text-sm font-bold transition hover:bg-gray-50 whitespace-nowrap">5º Ano A</button>
+                    <button id="filter-btn-5B" onclick="setClassFilter('5B')" class="class-filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-lg text-sm font-bold transition hover:bg-gray-50 whitespace-nowrap">5º Ano B</button>
+                    <button id="filter-btn-5C" onclick="setClassFilter('5C')" class="class-filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-lg text-sm font-bold transition hover:bg-gray-50 whitespace-nowrap">5º Ano C</button>
+                </div>
+
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex gap-4 items-center">
                     <div class="relative flex-grow">
                         <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -329,58 +346,58 @@
                 </div>
             </div>
 
-            <!-- VIEW: PERFIL DETALHADO DO ALUNO (Comum para Prof, Dir, Multi) -->
-            <div id="view-student-detail" class="app-section hidden p-6 md:p-8 max-w-5xl mx-auto fade-in pb-24">
-                <button onclick="voltarParaListaAnterior()" class="text-gray-500 hover:text-school-primary transition flex items-center gap-2 mb-6 font-medium text-sm bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm w-fit">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </button>
-
-                <!-- Cabeçalho do Aluno -->
-                <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6 md:p-8 mb-6 flex flex-col md:flex-row gap-6 items-start md:items-center relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-40 h-40 bg-[#005f73]/5 rounded-bl-[100px] -z-10"></div>
-                    
-                    <div class="w-28 h-28 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 text-gray-400 border-4 border-white shadow-lg overflow-hidden">
-                        <img src="" id="det-student-photo" class="w-full h-full object-cover hidden" alt="Foto">
-                        <i class="fas fa-user text-5xl" id="det-student-icon"></i>
-                    </div>
-                    
-                    <div class="flex-grow">
-                        <h2 id="det-student-name" class="text-3xl font-bold text-gray-800 mb-2">Nome do Aluno</h2>
-                        <div class="flex flex-wrap gap-3 text-sm font-medium">
-                            <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full border border-blue-200 flex items-center gap-1"><i class="fas fa-chalkboard"></i> <span id="det-student-class">Turma</span></span>
-                            <span class="bg-purple-50 text-purple-700 px-3 py-1 rounded-full border border-purple-200 flex items-center gap-1"><i class="fas fa-id-badge"></i> RA: <span id="det-student-id">000</span></span>
-                            <span class="bg-green-50 text-green-700 px-3 py-1 rounded-full border border-green-200 flex items-center gap-1"><i class="fas fa-check-circle"></i> Freq: <span id="det-student-freq">100%</span></span>
-                        </div>
-                    </div>
-                    
-                    <!-- Ações Rápidas (Apenas Professor/Direção) -->
-                    <div class="flex flex-col gap-2 min-w-[140px] only-prof only-dir">
-                        <button onclick="gerarPDF('boletim')" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition flex items-center gap-2 justify-center">
-                            <i class="fas fa-file-pdf text-red-500"></i> Boletim
-                        </button>
-                        <button onclick="gerarPDF('prontuario')" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition flex items-center gap-2 justify-center">
-                            <i class="fas fa-book-medical text-school-primary"></i> Relatório
-                        </button>
-                    </div>
+            <!-- VIEW: DIREÇÃO - ALERTAS INTELIGENTES -->
+            <div id="view-dir-alertas" class="app-section hidden p-6 md:p-8 max-w-7xl mx-auto fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Alertas de Atenção</h2>
+                    <p class="text-gray-500 text-sm mt-1">Mapeamento automático de alunos com baixa frequência ou notas críticas.</p>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Formulário de Prontuário -->
-                    <div class="lg:col-span-1 space-y-6">
-                        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sticky top-6">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2"><i class="fas fa-plus-circle text-school-secondary mr-1"></i> Novo Registro</h3>
-                            
-                            <form id="record-form" class="space-y-4">
-                                <input type="hidden" id="record-student-id">
-                                
-                                <div class="only-prof">
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">Observação Pedagógica</span>
-                                    <input type="hidden" id="record-type-prof" value="pedagogico">
-                                </div>
-                                
-                                <div class="only-multi">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Intervenção</label>
-                                    <select id="record-type-multi" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-sm font-medium">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Faltas -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-red-200 p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -z-10"></div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1 flex items-center gap-2"><i class="fas fa-user-times text-red-500"></i> Alertas de Frequência</h3>
+                        <p class="text-sm text-gray-500 mb-4 border-b border-gray-100 pb-2">Alunos com frequência abaixo de 75%</p>
+                        <div id="grid-alertas-faltas" class="space-y-3">
+                            <!-- JS -->
+                        </div>
+                        <div id="vazio-faltas" class="hidden text-center py-6 text-gray-400 text-sm"><i class="fas fa-check-circle text-green-500 text-2xl block mb-2"></i>Nenhum alerta de frequência.</div>
+                    </div>
+
+                    <!-- Notas Baixas -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-orange-200 p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full -z-10"></div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1 flex items-center gap-2"><i class="fas fa-arrow-down text-orange-500"></i> Alertas de Desempenho</h3>
+                        <p class="text-sm text-gray-500 mb-4 border-b border-gray-100 pb-2">Alunos com média final abaixo de 6.0</p>
+                        <div id="grid-alertas-notas" class="space-y-3">
+                            <!-- JS -->
+                        </div>
+                        <div id="vazio-notas" class="hidden text-center py-6 text-gray-400 text-sm"><i class="fas fa-check-circle text-green-500 text-2xl block mb-2"></i>Nenhum alerta de nota.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: REUNIÕES (Comum) -->
+            <div id="view-reunioes" class="app-section hidden p-6 md:p-8 max-w-5xl mx-auto fade-in">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Agenda de Reuniões</h2>
+                        <p class="text-gray-500 text-sm mt-1">Solicitações e agendamentos com as equipes da escola.</p>
+                    </div>
+                    <button onclick="document.getElementById('modal-reuniao').classList.remove('hidden')" class="bg-school-secondary text-white px-5 py-2.5 rounded-lg font-bold shadow hover:bg-[#087f82] transition flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Agendar / Solicitar
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 min-h-[400px]">
+                    <div id="reunioes-list" class="space-y-4">
+                        <!-- Injetado via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERFIL DETALHADO -->
                                         <option value="psicologia">Psicológica</option>
                                         <option value="fonoaudiologia">Fonoaudiológica</option>
                                         <option value="assistencia">Assistência Social</option>
@@ -428,6 +445,37 @@
                 <!-- Preenchido via JS antes de gerar o PDF -->
             </div>
 
+            <!-- MODAL NOVA REUNIÃO -->
+            <div id="modal-reuniao" class="fixed inset-0 bg-gray-900/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 fade-in border-t-4 border-school-secondary">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-calendar-plus text-school-secondary mr-2"></i>Nova Solicitação</h3>
+                    <form id="form-reuniao" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Para quem?</label>
+                            <select id="reuniao-para" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-school-secondary text-sm font-medium outline-none">
+                                <option value="Equipe Multidisciplinar">Equipe Multidisciplinar</option>
+                                <option value="Direção">Direção</option>
+                                <option value="Profa. Patrícia (5A)">Profa. Patrícia (5A)</option>
+                                <option value="Profa. Cátia (5B)">Profa. Cátia (5B)</option>
+                                <option value="Profa. Cibelle (5C)">Profa. Cibelle (5C)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Data Sugerida</label>
+                            <input type="date" id="reuniao-data" required class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-school-secondary">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Motivo / Assunto Principal</label>
+                            <textarea id="reuniao-motivo" required rows="3" class="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-school-secondary resize-none" placeholder="Ex: Acompanhamento de rotina, Dificuldades pedagógicas..."></textarea>
+                        </div>
+                        <div class="flex gap-3 justify-end mt-6 pt-2 border-t border-gray-100">
+                            <button type="button" onclick="document.getElementById('modal-reuniao').classList.add('hidden'); document.getElementById('form-reuniao').reset();" class="px-4 py-2 text-gray-500 font-medium hover:bg-gray-100 rounded-lg transition">Cancelar</button>
+                            <button type="submit" class="px-5 py-2 bg-school-primary text-white font-bold rounded-lg hover:bg-[#004d5e] transition shadow">Confirmar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -465,6 +513,8 @@
         let dbGrades = {}; // { studentId: { Portugues: {n1, n2, n3, n4}, Matematica: {...} } }
         let dbAttendance = {}; // { classId_date: { studentId: true/false } }
         let dbRecords = []; // { id, studentId, text, type, author, date, confidential }
+        let dbMeetings = []; // Novo mock para reuniões
+        let currentClassFilter = 'all'; // Para abas da multi
 
         // Gerador de RA Único
         function gerarRA(prefix) { return prefix + Math.floor(1000 + Math.random() * 9000); }
@@ -493,6 +543,13 @@
             dbRecords.push({
                 id: 'R2', studentId: dbStudents[0].id, type: 'psicologia', author: 'Dra. Silva', role: 'multidisciplinar',
                 date: new Date().toISOString(), text: 'Sessão de acompanhamento. Aluno relatou dificuldades familiares.', confidential: true
+            });
+            
+            // Reunião Mock inicial
+            dbMeetings.push({
+                id: 'M1', from: 'Profa. Patrícia', to: 'Equipe Multidisciplinar',
+                date: new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0],
+                reason: 'Discussão de caso e adaptação do aluno Gabriel', status: 'pendente'
             });
         }
         initMockDB();
@@ -552,6 +609,8 @@
             if (viewId === 'prof-notas') loadProfNotas();
             if (viewId === 'dir-dashboard') loadDirDashboard();
             if (viewId === 'shared-student-search') loadSharedSearch();
+            if (viewId === 'dir-alertas') loadDirAlertas();
+            if (viewId === 'reunioes') loadReunioes();
 
             if (pushHistory && viewId !== 'student-detail') {
                 lastListView = viewId;
@@ -650,9 +709,11 @@
                     </div>
                     <div class="flex-grow min-w-0">
                         <h3 class="font-bold text-gray-800 text-sm truncate">${aluno.name}</h3>
-                        <p class="text-xs text-gray-500">RA: ${aluno.ra} | Freq: ${freq}%</p>
+                        <p class="text-xs ${freq < 75 ? 'text-red-500 font-bold' : 'text-gray-500'}">RA: ${aluno.ra} | Freq: ${freq}% ${freq < 75 ? '(Alerta)' : ''}</p>
                     </div>
-                    <i class="fas fa-chevron-right text-gray-300 text-sm"></i>
+                    <button onclick="event.stopPropagation(); activeStudentId='${aluno.id}'; gerarPDF('boletim');" class="bg-white hover:bg-gray-100 border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-xs font-bold transition flex flex-col items-center justify-center shadow-sm flex-shrink-0" title="Baixar Boletim">
+                        <i class="fas fa-file-pdf text-red-500 text-base mb-0.5"></i> PDF
+                    </button>
                 `;
                 grid.appendChild(card);
             });
@@ -880,12 +941,26 @@
             renderGlobalStudents('');
         }
 
+        function setClassFilter(classId) {
+            currentClassFilter = classId;
+            document.querySelectorAll('.class-filter-btn').forEach(btn => {
+                btn.className = 'class-filter-btn px-4 py-2 bg-white text-gray-600 border border-gray-200 rounded-lg text-sm font-bold transition hover:bg-gray-50 whitespace-nowrap';
+            });
+            document.getElementById(`filter-btn-${classId}`).className = 'class-filter-btn px-4 py-2 bg-school-primary text-white rounded-lg text-sm font-bold transition shadow-sm whitespace-nowrap';
+            renderGlobalStudents(document.getElementById('global-search-input').value);
+        }
+
         function renderGlobalStudents(filterTerm = '') {
             const grid = document.getElementById('global-students-grid');
             grid.innerHTML = '';
             const term = filterTerm.toLowerCase();
 
-            const filtered = dbStudents.filter(s => s.name.toLowerCase().includes(term));
+            let filtered = dbStudents.filter(s => s.name.toLowerCase().includes(term));
+            
+            // Aplica filtro de aba (Multi)
+            if (currentClassFilter !== 'all') {
+                filtered = filtered.filter(s => s.classId === currentClassFilter);
+            }
             
             filtered.forEach(aluno => {
                 const card = document.createElement('div');
@@ -906,6 +981,118 @@
                 grid.appendChild(card);
             });
         }
+
+        // --- DIREÇÃO: ALERTAS (MÉDIAS E FALTAS) ---
+        function loadDirAlertas() {
+            const gridFaltas = document.getElementById('grid-alertas-faltas');
+            const gridNotas = document.getElementById('grid-alertas-notas');
+            gridFaltas.innerHTML = ''; gridNotas.innerHTML = '';
+
+            let countFaltas = 0, countNotas = 0;
+
+            dbStudents.forEach(aluno => {
+                // 1. Verificar Faltas
+                const freq = calcularFrequenciaGeral(aluno);
+                if (freq < 75) {
+                    gridFaltas.innerHTML += criarCardAlerta(aluno, 'Faltas', `${freq}% de presença geral`);
+                    countFaltas++;
+                }
+
+                // 2. Verificar Notas Baixas
+                let notasBaixas = [];
+                const notas = dbGrades[aluno.id] || {};
+                for (let disc in notas) {
+                    let n = notas[disc];
+                    let sum = 0, q = 0;
+                    if(n.n1 !== '') { sum+=n.n1; q++; }
+                    if(n.n2 !== '') { sum+=n.n2; q++; }
+                    if(n.n3 !== '') { sum+=n.n3; q++; }
+                    if(n.n4 !== '') { sum+=n.n4; q++; }
+                    if (q > 0) {
+                        let media = sum/q;
+                        if (media < 6.0) notasBaixas.push(`${disc} (${media.toFixed(1)})`);
+                    }
+                }
+                
+                if (notasBaixas.length > 0) {
+                    gridNotas.innerHTML += criarCardAlerta(aluno, 'Notas', notasBaixas.join(', '));
+                    countNotas++;
+                }
+            });
+
+            document.getElementById('vazio-faltas').style.display = countFaltas === 0 ? 'block' : 'none';
+            document.getElementById('vazio-notas').style.display = countNotas === 0 ? 'block' : 'none';
+        }
+
+        function criarCardAlerta(aluno, tipo, detalhe) {
+            return `
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 flex justify-between items-center cursor-pointer hover:border-gray-400 transition" onclick="openStudentDetail('${aluno.id}')">
+                    <div>
+                        <h4 class="font-bold text-gray-800 text-sm">${aluno.name} <span class="text-xs font-normal bg-gray-200 px-1.5 py-0.5 rounded ml-1">${aluno.classId}</span></h4>
+                        <p class="text-xs ${tipo === 'Faltas' ? 'text-red-600' : 'text-orange-600'} font-bold mt-1">
+                            ${detalhe}
+                        </p>
+                    </div>
+                    <div class="bg-white p-2 rounded shadow-sm">
+                        <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- SISTEMA DE REUNIÕES ---
+        function loadReunioes() {
+            const list = document.getElementById('reunioes-list');
+            list.innerHTML = '';
+            
+            if (dbMeetings.length === 0) {
+                list.innerHTML = `<div class="text-center py-10 text-gray-400"><i class="fas fa-coffee text-3xl mb-3 block"></i>Nenhuma reunião agendada.</div>`;
+                return;
+            }
+
+            // Ordena mais próximas primeiro
+            dbMeetings.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+            dbMeetings.forEach(mtg => {
+                const dataFormat = mtg.date.split('-').reverse().join('/');
+                list.innerHTML += `
+                    <div class="flex items-start md:items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+                        <div class="bg-blue-50 text-blue-600 p-3 rounded-lg flex-shrink-0 text-center min-w-[70px]">
+                            <p class="text-xs font-bold uppercase">Data</p>
+                            <p class="text-sm font-bold">${dataFormat.substring(0,5)}</p>
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-gray-800 text-sm md:text-base">${mtg.reason}</h3>
+                            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-user-friends mr-1"></i> <strong>De:</strong> ${mtg.from} | <strong>Para:</strong> ${mtg.to}</p>
+                        </div>
+                        <div class="hidden md:block">
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full border border-yellow-200">Pendente</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('form-reuniao').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const to = document.getElementById('reuniao-para').value;
+            const date = document.getElementById('reuniao-data').value;
+            const reason = document.getElementById('reuniao-motivo').value;
+
+            dbMeetings.push({
+                id: 'M' + Date.now(),
+                from: currentUser.nome,
+                to: to,
+                date: date,
+                reason: reason,
+                status: 'pendente'
+            });
+
+            document.getElementById('modal-reuniao').classList.add('hidden');
+            document.getElementById('form-reuniao').reset();
+            showToast('Solicitação de reunião enviada!', 'success');
+            loadReunioes(); // Recarrega a lista
+        });
 
         // --- DETALHE DO ALUNO (Comum) ---
         function openStudentDetail(studentId) {
