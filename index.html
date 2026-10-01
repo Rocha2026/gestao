@@ -3,601 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Escolar Completo - E.M.E.F Maria Luiza</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2pdf.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'school-primary': '#005f73',
-                        'school-secondary': '#0a9396',
-                        'school-accent': '#94d2bd',
-                        'school-warning': '#ee9b00'
-                    }
-                }
-            }
+    <title>Portal do Aluno e Gestão Escolar</title>
+    <style>
+        :root {
+            --primary-color: #1b365d;
+            --secondary-color: #4b6b94;
+            --accent-color: #2e7d32;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --border-color: #e9ecef;
         }
-    </script>
-</head>
-<body class="bg-gray-100 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- BARRA NAVEGAÇÃO SUPERIOR -->
-    <header class="bg-school-primary text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-school text-2xl text-school-accent"></i>
-                <div>
-                    <h1 class="font-bold text-lg leading-tight">E.M.E.F Maria Luiza</h1>
-                    <p class="text-xs text-school-accent">Sistema Integrado de Gestão Escolar & IA Pedagógica</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <span id="user-display" class="text-xs bg-white/10 px-3 py-1.5 rounded-full border border-white/20">
-                    <i class="fas fa-user-circle mr-1"></i> <span id="user-name-text">Usuário</span> (<span id="user-role-text">Função</span>)
-                </span>
-                <button onclick="alternarPerfil()" class="text-xs bg-school-secondary hover:bg-teal-600 px-3 py-1.5 rounded-lg transition font-bold">
-                    <i class="fas fa-sync-alt mr-1"></i> Trocar Perfil
-                </button>
-            </div>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.3rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .badge {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        ul.data-list {
+            list-style: none;
+        }
+
+        ul.data-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        ul.data-list li:last-child {
+            border-bottom: none;
+        }
+
+        .student-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .student-list li {
+            padding: 0.4rem 0;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container" style="margin: 0 auto;">
+            <h1>Portal de Gestão Escolar</h1>
         </div>
     </header>
 
-    <!-- CONTAINER PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 md:grid-cols-4 gap-6">
-
-        <!-- MENU LATERAL DE NAVEGAÇÃO -->
-        <aside class="md:col-span-1 bg-white p-4 rounded-xl shadow-sm border border-gray-200 h-fit space-y-1">
-            <div class="text-[10px] font-bold uppercase text-gray-400 px-3 py-1">Gestão & Ensino</div>
-            <button onclick="switchTab('dashboard')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 bg-school-primary text-white">
-                <i class="fas fa-chart-line w-4"></i> Dashboard General
-            </button>
-            <button onclick="switchTab('diario')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-book-open w-4"></i> Diário de Classe & Notas
-            </button>
-            <button onclick="switchTab('ia-pedagogica')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-robot w-4"></i> Tutor IA & Gerador BNCC
-            </button>
-            <button onclick="switchTab('aee')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-hands-helping w-4"></i> Plano PEI / AEE
-            </button>
-
-            <div class="text-[10px] font-bold uppercase text-gray-400 px-3 py-1 pt-3">Acompanhamento & Alunos</div>
-            <button onclick="switchTab('busca-ativa')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-user-shield w-4"></i> Busca Ativa & Evasão
-            </button>
-            <button onclick="switchTab('socioemocional')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-smile-beam w-4"></i> Check-in Socioemocional
-            </button>
-            <button onclick="switchTab('gamificacao')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-medal w-4"></i> Gamificação & Conquistas
-            </button>
-            <button onclick="switchTab('canal-ouvidoria')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-user-secret w-4"></i> Canal Anônimo
-            </button>
-
-            <div class="text-[10px] font-bold uppercase text-gray-400 px-3 py-1 pt-3">Família & Comunidade</div>
-            <button onclick="switchTab('responsavel')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-users-between-lines w-4"></i> Área do Responsável
-            </button>
-            <button onclick="switchTab('agenda')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-calendar-alt w-4"></i> Agenda Escolar
-            </button>
-            <button onclick="switchTab('saude')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-notes-medical w-4"></i> Saúde (PSE) & Merenda
-            </button>
-
-            <div class="text-[10px] font-bold uppercase text-gray-400 px-3 py-1 pt-3">Administração & Finanças</div>
-            <button onclick="switchTab('financas')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-file-invoice-dollar w-4"></i> Transparência PDDE
-            </button>
-            <button onclick="switchTab('patrimonio')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-boxes w-4"></i> Inventário de Patrimônio
-            </button>
-            <button onclick="switchTab('secretaria')" class="nav-btn w-full text-left px-3 py-2 rounded-lg font-bold text-xs flex items-center gap-2 text-gray-600 hover:bg-gray-100">
-                <i class="fas fa-file-signature w-4"></i> Secretaria & Educacenso
-            </button>
-        </aside>
-
-        <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
-        <section class="md:col-span-3 space-y-6">
-
-            <!-- TAB: DASHBOARD -->
-            <div id="tab-dashboard" class="tab-content space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <p class="text-xs text-gray-500 font-bold uppercase">Total de Alunos</p>
-                        <h3 id="dash-total-alunos" class="text-2xl font-black text-school-primary mt-1">0</h3>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <p class="text-xs text-gray-500 font-bold uppercase">Frequência Média</p>
-                        <h3 id="dash-media-freq" class="text-2xl font-black text-green-600 mt-1">0%</h3>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <p class="text-xs text-gray-500 font-bold uppercase">Risco de Evasão</p>
-                        <h3 id="dash-alertas-evasao" class="text-2xl font-black text-red-600 mt-1">0</h3>
-                    </div>
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                        <p class="text-xs text-gray-500 font-bold uppercase">Clima Socioemocional</p>
-                        <h3 id="dash-clima" class="text-2xl font-black text-yellow-500 mt-1">😊 88%</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="font-bold text-gray-800 text-sm mb-4">Média Acadêmica por Disciplina & Desempenho Preditivo</h3>
-                    <div class="h-64">
-                        <canvas id="chart-notas-bimestre"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: DIÁRIO DE CLASSE -->
-            <div id="tab-diario" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-edit text-school-primary mr-2"></i> Diário de Classe Digital</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <select id="sel-turma" class="p-2 border rounded-lg text-sm bg-gray-50">
-                        <option value="6A">6º Ano A</option>
-                        <option value="7B">7º Ano B</option>
-                    </select>
-                    <select id="sel-bimestre" class="p-2 border rounded-lg text-sm bg-gray-50">
-                        <option value="1">1º Bimestre</option>
-                        <option value="2">2º Bimestre</option>
-                        <option value="3">3º Bimestre</option>
-                        <option value="4">4º Bimestre</option>
-                    </select>
-                    <button onclick="carregarDiario()" class="bg-school-primary text-white font-bold px-4 py-2 rounded-lg text-sm hover:bg-teal-800">
-                        Carregar Turma
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-600">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th class="px-4 py-3">Aluno</th>
-                                <th class="px-4 py-3">Nota Bimestre</th>
-                                <th class="px-4 py-3">Faltas</th>
-                                <th class="px-4 py-3">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-diario-body">
-                            <!-- Inserido dinamicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- TAB: IA PEDAGÓGICA -->
-            <div id="tab-ia-pedagogica" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-brain text-school-primary mr-2"></i> Assistente IA Pedagógico & BNCC</h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 bg-teal-50 border border-teal-200 rounded-xl space-y-2">
-                        <h4 class="font-bold text-teal-900 text-sm"><i class="fas fa-magic mr-1"></i> Gerador de Questões BNCC</h4>
-                        <input type="text" id="ia-topico" placeholder="Ex: Frações, Revolução Francesa..." class="w-full p-2 text-xs border rounded-lg">
-                        <button onclick="gerarQuestoesIA()" class="w-full bg-school-primary text-white font-bold text-xs py-2 rounded-lg hover:bg-teal-800">Gerar Exercícios</button>
-                        <div id="ia-questoes-resultado" class="text-xs text-gray-700 mt-2 p-2 bg-white rounded border hidden"></div>
-                    </div>
-
-                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl space-y-2">
-                        <h4 class="font-bold text-blue-900 text-sm"><i class="fas fa-lightbulb mr-1"></i> Sugestão de Reforço Escolar</h4>
-                        <p class="text-xs text-blue-800">A IA identificou que 35% da turma 6A está com dificuldades em Matemática. Clique para gerar um plano de reforço em 3 etapas.</p>
-                        <button onclick="alert('Plano de reforço gerado com base no histórico de notas do 2º Bimestre!')" class="bg-blue-600 text-white font-bold text-xs px-3 py-2 rounded-lg hover:bg-blue-700">Gerar Plano de Reforço</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: PEI / AEE -->
-            <div id="tab-aee" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-hands-helping text-school-primary mr-2"></i> Plano PEI / Atendimento Especializado (AEE)</h3>
-                <div id="pei-container" class="space-y-3">
-                    <!-- Inserido via JS -->
-                </div>
-            </div>
-
-            <!-- TAB: BUSCA ATIVA -->
-            <div id="tab-busca-ativa" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2 text-red-600"><i class="fas fa-exclamation-triangle mr-2"></i> Sistema de Busca Ativa Escolar</h3>
-                <div id="busca-ativa-lista" class="space-y-3">
-                    <!-- Inserido via JS -->
-                </div>
-            </div>
-
-            <!-- TAB: CHECK-IN SOCIOEMOCIONAL -->
-            <div id="tab-socioemocional" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-heart text-school-primary mr-2"></i> Termômetro das Emoções (Socioemocional)</h3>
-                <p class="text-xs text-gray-500">Como os alunos relataram estar se sentindo no início da aula hoje:</p>
-                <div class="grid grid-cols-4 gap-3 text-center">
-                    <div class="p-3 bg-green-50 border border-green-200 rounded-xl cursor-pointer hover:bg-green-100" onclick="alert('70% dos alunos marcaram Feliz hoje')">
-                        <span class="text-2xl">😊</span>
-                        <p class="text-xs font-bold text-green-800 mt-1">Feliz (70%)</p>
-                    </div>
-                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100" onclick="alert('15% dos alunos marcaram Cansado')">
-                        <span class="text-2xl">😴</span>
-                        <p class="text-xs font-bold text-blue-800 mt-1">Cansado (15%)</p>
-                    </div>
-                    <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-xl cursor-pointer hover:bg-yellow-100" onclick="alert('10% dos alunos marcaram Ansioso')">
-                        <span class="text-2xl">😟</span>
-                        <p class="text-xs font-bold text-yellow-800 mt-1">Ansioso (10%)</p>
-                    </div>
-                    <div class="p-3 bg-red-50 border border-red-200 rounded-xl cursor-pointer hover:bg-red-100" onclick="alert('5% dos alunos relataram Tristeza - Equipe Orientada')">
-                        <span class="text-2xl">😢</span>
-                        <p class="text-xs font-bold text-red-800 mt-1">Triste (5%)</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: GAMIFICAÇÃO & CONQUISTAS -->
-            <div id="tab-gamificacao" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-award text-school-primary mr-2"></i> Quadro de Conquistas & Medalhas Virtuais</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="p-3 border rounded-xl bg-amber-50 flex items-center gap-3">
-                        <i class="fas fa-star text-2xl text-amber-500"></i>
-                        <div>
-                            <h4 class="text-xs font-bold text-amber-900">100% Presença</h4>
-                            <p class="text-[10px] text-amber-700">12 Alunos premiados no mês</p>
-                        </div>
-                    </div>
-                    <div class="p-3 border rounded-xl bg-purple-50 flex items-center gap-3">
-                        <i class="fas fa-book-reader text-2xl text-purple-500"></i>
-                        <div>
-                            <h4 class="text-xs font-bold text-purple-900">Leitor do Mês</h4>
-                            <p class="text-[10px] text-purple-700">Ana Beatris (5 livros lidos)</p>
-                        </div>
-                    </div>
-                    <div class="p-3 border rounded-xl bg-emerald-50 flex items-center gap-3">
-                        <i class="fas fa-seedling text-2xl text-emerald-500"></i>
-                        <div>
-                            <h4 class="text-xs font-bold text-emerald-900">Gincana Ecológica</h4>
-                            <p class="text-[10px] text-emerald-700">Turma 6A (1º Lugar)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: CANAL ANÔNIMO OUVIDORIA -->
-            <div id="tab-canal-ouvidoria" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-user-shield text-school-primary mr-2"></i> Canal Anônimo de Restauração & Convivência</h3>
-                <div class="p-4 bg-gray-50 border rounded-xl space-y-3">
-                    <p class="text-xs text-gray-600">Espaço seguro e sigiloso para relatos de bullying ou pedido de ajuda escolar.</p>
-                    <textarea id="ouvidoria-txt" placeholder="Descreva a situação sem se identificar..." class="w-full p-2 text-xs border rounded-lg h-20"></textarea>
-                    <button onclick="enviarOuvidoria()" class="bg-school-primary text-white font-bold text-xs px-4 py-2 rounded-lg hover:bg-teal-800">Enviar Relato Sigiloso</button>
-                </div>
-            </div>
-
-            <!-- TAB: ÁREA DO RESPONSÁVEL -->
-            <div id="tab-responsavel" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-child text-school-primary mr-2"></i> Portal da Família</h3>
-                <div class="p-4 bg-gray-50 border rounded-xl space-y-2">
-                    <p class="text-sm font-bold text-gray-800">Enviar Atestado Médico ou Justificativa</p>
-                    <input type="text" id="resp-motivo" placeholder="Motivo da ausência..." class="w-full p-2 text-sm border rounded-lg">
-                    <button onclick="enviarJustificativa()" class="bg-green-600 text-white font-bold text-xs px-4 py-2 rounded-lg hover:bg-green-700">Enviar à Secretaria</button>
-                </div>
-            </div>
-
-            <!-- TAB: AGENDA ESCOLAR -->
-            <div id="tab-agenda" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-calendar-check text-school-primary mr-2"></i> Agenda & Calendário de Eventos</h3>
-                <ul class="space-y-2 text-sm text-gray-700">
-                    <li class="p-3 bg-blue-50 border-l-4 border-blue-500 rounded"><span class="font-bold">15 de Outubro:</span> Conselho de Classe Participativo - 3º Bimestre</li>
-                    <li class="p-3 bg-green-50 border-l-4 border-green-500 rounded"><span class="font-bold">22 de Outubro:</span> Feira Cultural e Científica da E.M.E.F Maria Luiza</li>
+    <div class="container">
+        
+        <!-- Equipe de Gestão e Suporte -->
+        <h2 class="section-title">Equipe e Gestão</h2>
+        <div class="grid-container">
+            <div class="card">
+                <h3>Equipe Diretiva</h3>
+                <ul class="data-list">
+                    <li><span>Diretor:</span> <strong>Marcos</strong></li>
+                    <li><span>Vice-Diretora:</span> <strong>Rosangela</strong></li>
+                    <li><span>Coordenadoras:</span> <strong>Cristinei e Celia</strong></li>
                 </ul>
             </div>
 
-            <!-- TAB: SAÚDE (PSE) & MERENDA -->
-            <div id="tab-saude" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-heartbeat text-school-primary mr-2"></i> Saúde Escolar (PSE) & Cardápio</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-4 border rounded-xl bg-amber-50">
-                        <h4 class="font-bold text-amber-900 text-sm mb-2"><i class="fas fa-utensils mr-1"></i> Cardápio Semanal da Merenda</h4>
-                        <p class="text-xs text-amber-800">Arroz, Feijão, Frango Grelhado, Salada de Alface e Maçã de sobremesa.</p>
-                    </div>
-                    <div class="p-4 border rounded-xl bg-red-50">
-                        <h4 class="font-bold text-red-900 text-sm mb-2"><i class="fas fa-syringe mr-1"></i> Programa Saúde na Escola (PSE)</h4>
-                        <p class="text-xs text-red-800">Campanha de Vacinação e Triagem Visual agendadas para o próximo mês.</p>
-                    </div>
-                </div>
+            <div class="card">
+                <h3>Equipe Multidisciplinar</h3>
+                <ul class="data-list">
+                    <li><span>Acompanhamento Especializado:</span> <strong>Francisca</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Campo de Busca de Alunos -->
+        <h2 class="section-title">Turmas do 5º Ano</h2>
+        <input type="text" id="searchInput" class="search-box" placeholder="Buscar aluno por nome..." onkeyup="filtrarAlunos()">
+
+        <!-- Listagem de Turmas -->
+        <div class="grid-container">
+            
+            <!-- 5º Ano A -->
+            <div class="card">
+                <h3>5º Ano A</h3>
+                <span class="badge" id="count-5a">21 Alunos</span>
+                <ul class="data-list student-list" id="lista-5a"></ul>
             </div>
 
-            <!-- TAB: TRANSPARÊNCIA PDDE FINANÇAS -->
-            <div id="tab-financas" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-wallet text-school-primary mr-2"></i> Prestação de Contas PDDE / Caixa Escolar</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left text-gray-600">
-                        <thead class="bg-gray-100 uppercase text-gray-700">
-                            <tr>
-                                <th class="p-2">Data</th>
-                                <th class="p-2">Descrição da Despesa</th>
-                                <th class="p-2">Categoria</th>
-                                <th class="p-2">Valor</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b">
-                                <td class="p-2">10/09/2026</td>
-                                <td class="p-2">Compra de Tintas e Pincéis para Reforma da Biblioteca</td>
-                                <td class="p-2 font-bold text-blue-600">Manutenção</td>
-                                <td class="p-2 font-bold text-red-600">- R$ 450,00</td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="p-2">01/09/2026</td>
-                                <td class="p-2">Repasse Federal PDDE Básico</td>
-                                <td class="p-2 font-bold text-green-600">Verba Recebida</td>
-                                <td class="p-2 font-bold text-green-600">+ R$ 5.200,00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <!-- 5º Ano B -->
+            <div class="card">
+                <h3>5º Ano B</h3>
+                <span class="badge">Profa. Cátia</span>
+                <span class="badge" id="count-5b">22 Alunos</span>
+                <ul class="data-list student-list" id="lista-5b"></ul>
             </div>
 
-            <!-- TAB: PATRIMÔNIO -->
-            <div id="tab-patrimonio" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-boxes text-school-primary mr-2"></i> Inventário de Bens & Patrimônio</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div class="p-3 border rounded-xl bg-gray-50 flex justify-between items-center text-xs">
-                        <div>
-                            <p class="font-bold text-gray-800">Projetor Multimídia EPSON</p>
-                            <p class="text-gray-500">Patrimônio: #45892 | Sala dos Professores</p>
-                        </div>
-                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold">Em Uso</span>
-                    </div>
-                    <div class="p-3 border rounded-xl bg-gray-50 flex justify-between items-center text-xs">
-                        <div>
-                            <p class="font-bold text-gray-800">Notebook Dell Inspiron (Lab)</p>
-                            <p class="text-gray-500">Patrimônio: #45893 | Laboratório Informática</p>
-                        </div>
-                        <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded font-bold">Manutenção</span>
-                    </div>
-                </div>
+            <!-- 5º Ano C -->
+            <div class="card">
+                <h3>5º Ano C</h3>
+                <span class="badge">Profa. Cibelle</span>
+                <span class="badge" id="count-5c">21 Alunos</span>
+                <ul class="data-list student-list" id="lista-5c"></ul>
             </div>
 
-            <!-- TAB: SECRETARIA & GERADOR DE PDF & EDUCACENSO -->
-            <div id="tab-secretaria" class="tab-content hidden bg-white p-5 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <h3 class="font-bold text-gray-800 text-lg border-b pb-2"><i class="fas fa-file-pdf text-school-primary mr-2"></i> Documentos & Integração Censo Escolar</h3>
-                <div class="flex flex-wrap gap-3">
-                    <button onclick="gerarDocumentoOficial('declaracao')" class="bg-school-primary text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-teal-800">
-                        <i class="fas fa-file-alt mr-1"></i> Declaração de Matrícula PDF
-                    </button>
-                    <button onclick="gerarDocumentoOficial('boletim')" class="bg-school-secondary text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-teal-700">
-                        <i class="fas fa-graduation-cap mr-1"></i> Boletim Escolar PDF
-                    </button>
-                    <button onclick="alert('Exportando arquivo .txt padrão Educacenso / Inep...')" class="bg-gray-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-gray-900">
-                        <i class="fas fa-database mr-1"></i> Exportar Dados Censo
-                    </button>
-                </div>
-            </div>
-
-        </section>
-    </main>
-
-    <!-- TEMPLATE PARA IMPRESSÃO / PDF -->
-    <div id="pdf-template" class="hidden p-8 bg-white text-black space-y-4">
-        <!-- Preenchido via script -->
+        </div>
     </div>
 
-    <!-- SCRIPT DE LÓGICA DO SISTEMA -->
+    <footer>
+        <p>&copy; Sistema de Gestão Escolar - Todos os direitos reservados.</p>
+    </footer>
+
     <script>
-        // --- BASE DE DADOS MOCK ---
-        const perfis = ['professor', 'direcao', 'responsavel'];
-        let perfilAtualIndex = 0;
-        let currentUser = { nome: "Prof. Carlos Silva", role: "professor", email: "carlos@escola.gov.br" };
-
-        const alunosBD = [
-            { id: "A101", nome: "Ana Beatris Souza", turma: "6A", notas: { 1: 8.5, 2: 7.0, 3: 9.0, 4: 0 }, faltas: { 1: 2, 2: 4, 3: 1, 4: 0 }, pei: "Acompanhamento de atenção focada em Matemática.", restricao: "Lactose" },
-            { id: "A102", nome: "Bruno Guilherme Lima", turma: "6A", notas: { 1: 5.0, 2: 4.5, 3: 5.5, 4: 0 }, faltas: { 1: 12, 2: 15, 3: 10, 4: 0 }, pei: null, restricao: "Nenhuma" },
-            { id: "A103", nome: "Carla Fernandez", turma: "7B", notas: { 1: 9.0, 2: 9.5, 3: 9.0, 4: 0 }, faltas: { 1: 0, 2: 1, 3: 0, 4: 0 }, pei: null, restricao: "Glúten" }
-        ];
-
-        // --- NAVEGAÇÃO ENTRE TABS ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-school-primary', 'text-white');
-                btn.classList.add('text-gray-600');
-            });
-            event.currentTarget.classList.add('bg-school-primary', 'text-white');
-            event.currentTarget.classList.remove('text-gray-600');
-        }
-
-        // --- TROCA DE PERFIL ---
-        function alternarPerfil() {
-            perfilAtualIndex = (perfilAtualIndex + 1) % perfis.length;
-            const p = perfis[perfilAtualIndex];
-            currentUser.role = p;
-            currentUser.nome = p === 'professor' ? "Prof. Carlos Silva" : (p === 'direcao' ? "Diretora Maria" : "Responsável (Mãe da Ana)");
-
-            document.getElementById('user-name-text').textContent = currentUser.nome;
-            document.getElementById('user-role-text').textContent = p.toUpperCase();
-        }
-
-        // --- CÁLCULOS E DASHBOARD ---
-        function initDashboard() {
-            document.getElementById('dash-total-alunos').textContent = alunosBD.length;
-            
-            let totalFaltas = 0;
-            let evasaoCount = 0;
-
-            alunosBD.forEach(a => {
-                const f = a.faltas[1] + a.faltas[2] + a.faltas[3];
-                if (f > 20) evasaoCount++;
-                totalFaltas += f;
-            });
-
-            document.getElementById('dash-media-freq').textContent = `${Math.round(100 - (totalFaltas / alunosBD.length))}%`;
-            document.getElementById('dash-alertas-evasao').textContent = evasaoCount;
-
-            renderChart();
-            carregarPEI();
-            carregarBuscaAtiva();
-        }
-
-        function renderChart() {
-            const ctx = document.getElementById('chart-notas-bimestre');
-            if (!ctx) return;
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['1º Bimestre', '2º Bimestre', '3º Bimestre'],
-                    datasets: [{
-                        label: 'Média de Rendimento Escolar',
-                        data: [7.5, 7.0, 7.8],
-                        backgroundColor: '#0a9396'
-                    }]
+        // Estrutura de dados oficial da instituição
+        const escolaDados = {
+            gestao: {
+                diretor: "Marcos",
+                viceDiretora: "Rosangela",
+                coordenadoras: ["Cristinei", "Celia"],
+                multidisciplinar: "Francisca"
+            },
+            turmas: {
+                ano5A: {
+                    professora: null,
+                    alunos: [
+                        "Alhena Fessel", "Alicia", "Ana Luiza", "Beatris Vitoria", 
+                        "Carlos Wesley", "Charles Henrique", "Enrico Amorim", "Gabriel Ferreira", 
+                        "Gabriel Nogueira", "Heitor Rosa", "Helena Mendonça", "José Henrique", 
+                        "Lucas Henrique", "Luna Hope", "Marina Ferreira", "Miguel Ragazzi", 
+                        "Pedro Henrique", "Piettro Lang", "Renan Jardim", "Sophia Giglioti", 
+                        "Vinícius Itipão"
+                    ]
                 },
-                options: { responsive: true, maintainAspectRatio: false }
+                ano5B: {
+                    professora: "Cátia",
+                    alunos: [
+                        "Acauã Munaro", "Ana Clara", "Anna Catharina", "Eduarda Rafaelly", 
+                        "Eike Pazzine", "Julia Capobianco", "Lara Laurinda", "Larissa Dib", 
+                        "Leonardo Carvalho", "Lucas Zampieri", "Luigi Santos", "Marcela Weksler", 
+                        "Maria Valentina", "Melissa Mel", "Pedro Vieira", "Rafaella Munhoz", 
+                        "Renan Lucas", "Ricardo Augusto", "Ronaldo Bertato", "Sophia Santos", 
+                        "Vinicius Eiji", "Vinicius Pereira"
+                    ]
+                },
+                ano5C: {
+                    professora: "Cibelle",
+                    alunos: [
+                        "Alice Lopes", "Alice Santiago", "Alicia Marques", "Ana Laura", 
+                        "Caio Lima", "Catarina Varela", "Gabriel Soares", "Gabriela Camargo", 
+                        "Gael De Araujo", "Heitor Cardoso", "Helena Ye", "Heloisa Barboza", 
+                        "Isabella Amato", "João Lucas", "Lorenzo Ryu", "Maria Julia", 
+                        "Melissa Ferrari", "Pedro Custodio", "Pedro Henrique", "Pedro Lucas", 
+                        "Vinicius Pescara"
+                    ]
+                }
+            }
+        };
+
+        // Função para renderizar as listas de alunos na interface
+        function renderizarTurmas() {
+            renderLista("lista-5a", escolaDados.turmas.ano5A.alunos);
+            renderLista("lista-5b", escolaDados.turmas.ano5B.alunos);
+            renderLista("lista-5c", escolaDados.turmas.ano5C.alunos);
+        }
+
+        function renderLista(elementId, listaAlunos) {
+            const ul = document.getElementById(elementId);
+            ul.innerHTML = "";
+            
+            // Ordenação alfabética
+            listaAlunos.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+            listaAlunos.forEach(aluno => {
+                const li = document.createElement("li");
+                li.className = "student-item";
+                li.textContent = aluno;
+                ul.appendChild(li);
             });
         }
 
-        // --- DIÁRIO DE CLASSE DE NOTAS ---
-        function carregarDiario() {
-            const turma = document.getElementById('sel-turma').value;
-            const bimestre = document.getElementById('sel-bimestre').value;
-            const tbody = document.getElementById('lista-diario-body');
-            tbody.innerHTML = '';
+        // Função para filtro/busca em tempo real
+        function filtrarAlunos() {
+            const termo = document.getElementById("searchInput").value.toLowerCase();
+            const todosAlunos = document.querySelectorAll(".student-item");
 
-            const filtrados = alunosBD.filter(a => a.turma === turma);
-
-            filtrados.forEach(aluno => {
-                tbody.innerHTML += `
-                    <tr class="border-b bg-white hover:bg-gray-50">
-                        <td class="px-4 py-3 font-bold text-gray-800">${aluno.nome}</td>
-                        <td class="px-4 py-3">
-                            <input type="number" step="0.5" value="${aluno.notas[bimestre]}" class="w-16 p-1 border rounded text-center">
-                        </td>
-                        <td class="px-4 py-3">
-                            <input type="number" value="${aluno.faltas[bimestre]}" class="w-16 p-1 border rounded text-center">
-                        </td>
-                        <td class="px-4 py-3">
-                            <button onclick="alert('Lançamento salvo!')" class="text-xs bg-school-secondary text-white px-3 py-1 rounded">Salvar</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        // --- PEI / AEE ---
-        function carregarPEI() {
-            const cont = document.getElementById('pei-container');
-            cont.innerHTML = '';
-
-            alunosBD.filter(a => a.pei).forEach(a => {
-                cont.innerHTML += `
-                    <div class="p-4 border border-teal-200 bg-teal-50 rounded-xl">
-                        <h4 class="font-bold text-teal-900 text-sm">${a.nome} (${a.turma})</h4>
-                        <p class="text-xs text-teal-800 mt-1"><strong>Plano PEI:</strong> ${a.pei}</p>
-                    </div>
-                `;
-            });
-        }
-
-        // --- BUSCA ATIVA ---
-        function carregarBuscaAtiva() {
-            const cont = document.getElementById('busca-ativa-lista');
-            cont.innerHTML = '';
-
-            alunosBD.forEach(a => {
-                const totalF = a.faltas[1] + a.faltas[2] + a.faltas[3];
-                if (totalF >= 15) {
-                    cont.innerHTML += `
-                        <div class="p-3 border border-red-200 bg-red-50 rounded-xl flex justify-between items-center">
-                            <div>
-                                <p class="font-bold text-red-800 text-sm">${a.nome} (${a.turma})</p>
-                                <p class="text-xs text-red-600">Total de faltas acumuladas: ${totalF}</p>
-                            </div>
-                            <button onclick="alert('Notificação enviada ao Conselho Tutelar/Responsável')" class="text-xs bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg">
-                                Notificar Busca Ativa
-                            </button>
-                        </div>
-                    `;
+            todosAlunos.forEach(item => {
+                const nome = item.textContent.toLowerCase();
+                if (nome.includes(termo)) {
+                    item.style.display = "flex";
+                } else {
+                    item.style.display = "none";
                 }
             });
         }
 
-        // --- IA PEDAGÓGICA ---
-        function gerarQuestoesIA() {
-            const topico = document.getElementById('ia-topico').value;
-            const res = document.getElementById('ia-questoes-resultado');
-            if(!topico) return alert('Digite um tópico!');
-            
-            res.classList.remove('hidden');
-            res.innerHTML = `<strong>Questões Geradas sobre ${topico}:</strong><br>1. Explique a relação de ${topico} com o cotidiano.<br>2. Calcule/Analise o impacto de ${topico} conforme a habilidade BNCC EF06MA01.`;
-        }
-
-        // --- CANAL DE OUVIDORIA ---
-        function enviarOuvidoria() {
-            const txt = document.getElementById('ouvidoria-txt').value;
-            if(!txt) return alert('Digite a mensagem.');
-            alert('Relato anônimo registrado com sucesso! Encaminhado à Equipe de Restauração Escolar.');
-            document.getElementById('ouvidoria-txt').value = '';
-        }
-
-        // --- ÁREA DO RESPONSÁVEL ---
-        function enviarJustificativa() {
-            const txt = document.getElementById('resp-motivo').value;
-            if (!txt) return alert('Digite a justificativa');
-            alert('Justificativa enviada à coordenação com sucesso!');
-            document.getElementById('resp-motivo').value = '';
-        }
-
-        // --- GERADOR DE DOCUMENTOS PDF ---
-        function gerarDocumentoOficial(tipo) {
-            const container = document.getElementById('pdf-template');
-            container.classList.remove('hidden');
-
-            const aluno = alunosBD[0];
-
-            if (tipo === 'declaracao') {
-                container.innerHTML = `
-                    <div style="text-align: center;">
-                        <h2>E.M.E.F MARIA LUIZA</h2>
-                        <p>DECLARAÇÃO DE MATRÍCULA ESCOLAR</p>
-                        <hr style="margin: 20px 0;">
-                    </div>
-                    <p>Declaramos para os devidos fins que <strong>${aluno.nome}</strong> está regularmente matriculado(a) nesta unidade escolar na turma <strong>${aluno.turma}</strong> do Ensino Fundamental.</p>
-                    <p style="margin-top: 40px; text-align: right;">Piracicaba, ${new Date().toLocaleDateString('pt-BR')}</p>
-                `;
-            } else {
-                container.innerHTML = `
-                    <div style="text-align: center;">
-                        <h2>E.M.E.F MARIA LUIZA</h2>
-                        <p>BOLETIM ESCOLAR OFICIAL</p>
-                        <hr style="margin: 20px 0;">
-                    </div>
-                    <p><strong>Aluno:</strong> ${aluno.nome} | <strong>Turma:</strong> ${aluno.turma}</p>
-                    <p>1º Bimestre: Nota ${aluno.notas[1]} | Faltas: ${aluno.faltas[1]}</p>
-                    <p>2º Bimestre: Nota ${aluno.notas[2]} | Faltas: ${aluno.faltas[2]}</p>
-                    <p>3º Bimestre: Nota ${aluno.notas[3]} | Faltas: ${aluno.faltas[3]}</p>
-                `;
-            }
-
-            const opt = {
-                margin: 10,
-                filename: `${tipo}_${aluno.nome.replace(/\s+/g, '_')}.pdf`,
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(container).save().then(() => {
-                container.classList.add('hidden');
-            });
-        }
-
-        // INICIALIZAÇÃO AUTOMÁTICA
-        window.onload = function() {
-            document.getElementById('user-name-text').textContent = currentUser.nome;
-            document.getElementById('user-role-text').textContent = currentUser.role.toUpperCase();
-            initDashboard();
-        };
+        // Inicializar renderização ao carregar a página
+        document.addEventListener("DOMContentLoaded", renderizarTurmas);
     </script>
 </body>
 </html>
