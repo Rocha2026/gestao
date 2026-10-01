@@ -40,10 +40,42 @@
             font-weight: 600;
         }
 
+        /* Menu de Navegação Por Abas */
+        nav.main-nav {
+            background-color: var(--secondary-color);
+            display: flex;
+            gap: 1rem;
+            padding: 0 2rem;
+        }
+
+        nav.main-nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        nav.main-nav button:hover, nav.main-nav button.active {
+            background-color: var(--primary-color);
+            border-bottom: 3px solid #ffffff;
+        }
+
         .container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .section-title {
@@ -84,15 +116,31 @@
             font-weight: 600;
             display: inline-block;
             margin-bottom: 1rem;
+            margin-right: 0.3rem;
         }
 
-        .search-box {
+        .search-box, input[type="text"], select, textarea {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ced4da;
             border-radius: 6px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             font-size: 1rem;
+        }
+
+        button.btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.btn-primary:hover {
+            background-color: var(--secondary-color);
         }
 
         ul.data-list {
@@ -117,9 +165,15 @@
             padding-right: 0.5rem;
         }
 
-        .student-list li {
-            padding: 0.4rem 0;
-            font-size: 0.95rem;
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .metric-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
         }
 
         footer {
@@ -135,64 +189,126 @@
 <body>
 
     <header>
-        <div class="container" style="margin: 0 auto;">
+        <div class="container" style="margin: 0 auto; padding: 0;">
             <h1>Portal de Gestão Escolar</h1>
         </div>
     </header>
 
+    <!-- Navegação de Módulos -->
+    <nav class="main-nav">
+        <button class="nav-btn active" onclick="switchTab('turmas')">Turmas & Alunos</button>
+        <button class="nav-btn" onclick="switchTab('gestao')">Painel da Gestão</button>
+        <button class="nav-btn" onclick="switchTab('mural')">Mural de Avisos</button>
+    </nav>
+
     <div class="container">
         
-        <!-- Equipe de Gestão e Suporte -->
-        <h2 class="section-title">Equipe e Gestão</h2>
-        <div class="grid-container">
-            <div class="card">
-                <h3>Equipe Diretiva</h3>
-                <ul class="data-list">
-                    <li><span>Diretor:</span> <strong>Marcos</strong></li>
-                    <li><span>Vice-Diretora:</span> <strong>Rosangela</strong></li>
-                    <li><span>Coordenadoras:</span> <strong>Cristinei e Celia</strong></li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <h3>Equipe Multidisciplinar</h3>
-                <ul class="data-list">
-                    <li><span>Acompanhamento Especializado:</span> <strong>Francisca</strong></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Campo de Busca de Alunos -->
-        <h2 class="section-title">Turmas do 5º Ano</h2>
-        <input type="text" id="searchInput" class="search-box" placeholder="Buscar aluno por nome..." onkeyup="filtrarAlunos()">
-
-        <!-- Listagem de Turmas -->
-        <div class="grid-container">
+        <!-- MÓDULO 1: TURMAS E ALUNOS -->
+        <div id="tab-turmas" class="tab-content active">
+            <h2 class="section-title">Turmas do 5º Ano</h2>
             
-            <!-- 5º Ano A -->
-            <div class="card">
-                <h3>5º Ano A</h3>
-                <span class="badge" id="count-5a">21 Alunos</span>
-                <ul class="data-list student-list" id="lista-5a"></ul>
-            </div>
+            <!-- Campo de Busca em Tempo Real -->
+            <input type="text" id="searchInput" class="search-box" placeholder="Buscar aluno por nome em todas as turmas..." onkeyup="filtrarAlunos()">
 
-            <!-- 5º Ano B -->
-            <div class="card">
-                <h3>5º Ano B</h3>
-                <span class="badge">Profa. Cátia</span>
-                <span class="badge" id="count-5b">22 Alunos</span>
-                <ul class="data-list student-list" id="lista-5b"></ul>
-            </div>
+            <div class="grid-container">
+                <!-- 5º Ano A -->
+                <div class="card">
+                    <h3>5º Ano A</h3>
+                    <span class="badge" id="count-5a">21 Alunos</span>
+                    <ul class="data-list student-list" id="lista-5a"></ul>
+                </div>
 
-            <!-- 5º Ano C -->
-            <div class="card">
-                <h3>5º Ano C</h3>
-                <span class="badge">Profa. Cibelle</span>
-                <span class="badge" id="count-5c">21 Alunos</span>
-                <ul class="data-list student-list" id="lista-5c"></ul>
-            </div>
+                <!-- 5º Ano B -->
+                <div class="card">
+                    <h3>5º Ano B</h3>
+                    <span class="badge">Profa. Cátia</span>
+                    <span class="badge" id="count-5b">22 Alunos</span>
+                    <ul class="data-list student-list" id="lista-5b"></ul>
+                </div>
 
+                <!-- 5º Ano C -->
+                <div class="card">
+                    <h3>5º Ano C</h3>
+                    <span class="badge">Profa. Cibelle</span>
+                    <span class="badge" id="count-5c">21 Alunos</span>
+                    <ul class="data-list student-list" id="lista-5c"></ul>
+                </div>
+            </div>
         </div>
+
+        <!-- MÓDULO 2: PAINEL DA GESTÃO & CADASTRO -->
+        <div id="tab-gestao" class="tab-content">
+            <h2 class="section-title">Visão Geral & Métricas</h2>
+            
+            <div class="grid-container">
+                <div class="card metric-card">
+                    <h3>Total de Alunos</h3>
+                    <div class="number" id="total-alunos">64</div>
+                </div>
+                <div class="card metric-card">
+                    <h3>Turmas Ativas</h3>
+                    <div class="number">3</div>
+                </div>
+                <div class="card metric-card">
+                    <h3>Equipe de Apoio</h3>
+                    <div class="number">1</div>
+                </div>
+            </div>
+
+            <div class="grid-container">
+                <div class="card">
+                    <h3>Equipe Diretiva</h3>
+                    <ul class="data-list">
+                        <li><span>Diretor:</span> <strong>Marcos</strong></li>
+                        <li><span>Vice-Diretora:</span> <strong>Rosangela</strong></li>
+                        <li><span>Coordenadoras:</span> <strong>Cristinei e Celia</strong></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Equipe Multidisciplinar</h3>
+                    <ul class="data-list">
+                        <li><span>Acompanhamento Especializado:</span> <strong>Francisca</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2 class="section-title">Cadastrar Novo Aluno</h2>
+            <div class="card">
+                <form id="form-novo-aluno" onsubmit="adicionarAluno(event)">
+                    <label for="nomeAluno">Nome do Aluno:</label>
+                    <input type="text" id="nomeAluno" required placeholder="Digite o nome completo">
+                    
+                    <label for="turmaAluno">Turma:</label>
+                    <select id="turmaAluno" required>
+                        <option value="ano5A">5º Ano A</option>
+                        <option value="ano5B">5º Ano B (Profa. Cátia)</option>
+                        <option value="ano5C">5º Ano C (Profa. Cibelle)</option>
+                    </select>
+
+                    <button type="submit" class="btn-primary">Cadastrar Aluno</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3: MURAL DE AVISOS -->
+        <div id="tab-mural" class="tab-content">
+            <h2 class="section-title">Mural da Escola</h2>
+            
+            <div class="card" style="margin-bottom: 2rem;">
+                <h3>Publicar Novo Aviso</h3>
+                <form id="form-aviso" onsubmit="publicarAviso(event)">
+                    <input type="text" id="tituloAviso" placeholder="Título do aviso" required>
+                    <textarea id="conteudoAviso" rows="3" placeholder="Escreva o comunicado aqui..." required></textarea>
+                    <button type="submit" class="btn-primary">Publicar Aviso</button>
+                </form>
+            </div>
+
+            <div id="container-avisos">
+                <!-- Avisos serão inseridos aqui dinamicamente -->
+            </div>
+        </div>
+
     </div>
 
     <footer>
@@ -200,7 +316,7 @@
     </footer>
 
     <script>
-        // Estrutura de dados oficial da instituição
+        // Estrutura de dados central da instituição
         const escolaDados = {
             gestao: {
                 diretor: "Marcos",
@@ -242,22 +358,36 @@
                         "Vinicius Pescara"
                     ]
                 }
-            }
+            },
+            avisos: [
+                { titulo: "Reunião de Pais e Mestres", texto: "A reunião referente ao bimestre atual ocorrerá no próximo sábado às 09h.", data: "01/10/2026" }
+            ]
         };
 
-        // Função para renderizar as listas de alunos na interface
-        function renderizarTurmas() {
-            renderLista("lista-5a", escolaDados.turmas.ano5A.alunos);
-            renderLista("lista-5b", escolaDados.turmas.ano5B.alunos);
-            renderLista("lista-5c", escolaDados.turmas.ano5C.alunos);
+        // Alternar entre as abas do sistema
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        function renderLista(elementId, listaAlunos) {
+        // Renderizar a listagem de alunos nas respectivas turmas
+        function renderizarTurmas() {
+            renderLista("lista-5a", escolaDados.turmas.ano5A.alunos, "count-5a");
+            renderLista("lista-5b", escolaDados.turmas.ano5B.alunos, "count-5b");
+            renderLista("lista-5c", escolaDados.turmas.ano5C.alunos, "count-5c");
+            atualizarContadoresTotais();
+        }
+
+        function renderLista(elementId, listaAlunos, countId) {
             const ul = document.getElementById(elementId);
+            const countBadge = document.getElementById(countId);
             ul.innerHTML = "";
             
-            // Ordenação alfabética
             listaAlunos.sort((a, b) => a.localeCompare(b, 'pt-BR'));
+            countBadge.textContent = `${listaAlunos.length} Alunos`;
 
             listaAlunos.forEach(aluno => {
                 const li = document.createElement("li");
@@ -267,23 +397,74 @@
             });
         }
 
-        // Função para filtro/busca em tempo real
+        function atualizarContadoresTotais() {
+            const total = escolaDados.turmas.ano5A.alunos.length + 
+                          escolaDados.turmas.ano5B.alunos.length + 
+                          escolaDados.turmas.ano5C.alunos.length;
+            document.getElementById('total-alunos').textContent = total;
+        }
+
+        // Filtragem de Alunos em Tempo Real
         function filtrarAlunos() {
             const termo = document.getElementById("searchInput").value.toLowerCase();
             const todosAlunos = document.querySelectorAll(".student-item");
 
             todosAlunos.forEach(item => {
                 const nome = item.textContent.toLowerCase();
-                if (nome.includes(termo)) {
-                    item.style.display = "flex";
-                } else {
-                    item.style.display = "none";
-                }
+                item.style.display = nome.includes(termo) ? "flex" : "none";
             });
         }
 
-        // Inicializar renderização ao carregar a página
-        document.addEventListener("DOMContentLoaded", renderizarTurmas);
+        // Adicionar Aluno Dinamicamente
+        function adicionarAluno(event) {
+            event.preventDefault();
+            const nome = document.getElementById("nomeAluno").value.trim();
+            const turmaKey = document.getElementById("turmaAluno").value;
+
+            if (nome && escolaDados.turmas[turmaKey]) {
+                escolaDados.turmas[turmaKey].alunos.push(nome);
+                renderizarTurmas();
+                document.getElementById("form-novo-aluno").reset();
+                alert(`Aluno(a) "${nome}" cadastrado(a) com sucesso!`);
+            }
+        }
+
+        // Gerenciamento do Mural de Avisos
+        function renderizarAvisos() {
+            const container = document.getElementById("container-avisos");
+            container.innerHTML = "";
+
+            escolaDados.avisos.forEach(aviso => {
+                const div = document.createElement("div");
+                div.className = "card";
+                div.style.marginBottom = "1rem";
+                div.innerHTML = `
+                    <h3>${aviso.titulo}</h3>
+                    <span class="badge">${aviso.data}</span>
+                    <p>${aviso.texto}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function publicarAviso(event) {
+            event.preventDefault();
+            const titulo = document.getElementById("tituloAviso").value.trim();
+            const texto = document.getElementById("conteudoAviso").value.trim();
+            const dataHoje = new Date().toLocaleDateString('pt-BR');
+
+            if (titulo && texto) {
+                escolaDados.avisos.unshift({ titulo, texto, data: dataHoje });
+                renderizarAvisos();
+                document.getElementById("form-aviso").reset();
+            }
+        }
+
+        // Inicialização
+        document.addEventListener("DOMContentLoaded", () => {
+            renderizarTurmas();
+            renderizarAvisos();
+        });
     </script>
 </body>
 </html>
