@@ -332,6 +332,101 @@
 
     <!-- SCRIPT DE LÓGICA DA APLICAÇÃO -->
     <script>
+        // CONTROLE DE ACESSO (RBAC)
+function alterarPerfil() {
+    const role = document.getElementById('userRole').value;
+    const tabPsico = document.getElementById('tab-psicologia');
+    const seletorChamada = document.getElementById('seletorTurmaChamada');
+    const seletorBoletim = document.getElementById('seletorTurmaBoletim');
+
+    // Apenas Direção, Coordenação e Psicologia vêem a aba confidencial
+    if (role === 'psicologia' || role === 'direcao' || role === 'coordenacao') {
+        if(tabPsico) tabPsico.classList.remove('hidden');
+    } else {
+        if(tabPsico) tabPsico.classList.add('hidden');
+        if (!document.getElementById('sec-psicologia').classList.contains('hidden')) {
+            mudarAba('dashboard');
+        }
+    }
+
+    // Filtra automaticamente a turma dependendo do professor selecionado
+    if (role === 'prof_patricia' && seletorChamada) { seletorChamada.value = '5A'; if(seletorBoletim) seletorBoletim.value = '5A'; }
+    if (role === 'prof_catia' && seletorChamada) { seletorChamada.value = '5B'; if(seletorBoletim) seletorBoletim.value = '5B'; }
+    if (role === 'prof_cibelle' && seletorChamada) { seletorChamada.value = '5C'; if(seletorBoletim) seletorBoletim.value = '5C'; }
+
+    if(typeof carregarAlunosChamada === 'function') carregarAlunosChamada();
+    if(typeof carregarAlunosBoletim === 'function') carregarAlunosBoletim();
+}
+
+// EXPORTAÇÃO DE RELATÓRIO (.CSV)
+function exportarChamadaCSV() {
+    const turma = document.getElementById('seletorTurmaChamada').value;
+    const data = document.getElementById('dataChamada').value;
+    let csvContent = "data:text/csv;charset=utf-8,Numero,Aluno,Status,Data,Turma\n";
+
+    if(alunosEscola && alunosEscola[turma]) {
+        alunosEscola[turma].forEach((aluno, idx) => {
+            const statusRadio = document.querySelector(`input[name="presenca_${idx}"]:checked`);
+            const status = statusRadio ? (statusRadio.value === 'P' ? 'Presente' : 'Ausente') : 'Presente';
+            csvContent += `${idx + 1},"${aluno}",${status},${data},${turma}\n`;
+        });
+    }
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `chamada_${turma}_${data}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// PERSISTÊNCIA DO PRONTUÁRIO PSICOLÓGICO
+function salvarProntuario() {
+    const aluno = document.getElementById('psicoAlunoSelect').value;
+    const cat = document.getElementById('psicoCategoria').value;
+    const texto = document.getElementById('psicoTexto').value;
+
+    if (!texto.trim()) {
+        alert('Por favor, descreva as anotações do atendimento.');
+        return;
+    }
+
+    const novoRegistro = { aluno, cat, texto, data: new Date().toLocaleDateString('pt-BR') };
+    const historico = JSON.parse(localStorage.getItem('prontuarioPsico') || '[]');
+    historico.unshift(novoRegistro);
+    localStorage.setItem('prontuarioPsico', JSON.stringify(historico));
+
+    document.getElementById('psicoTexto').value = '';
+    renderizarHistoricoPsicologia();
+    alert('Atendimento salvo com sucesso!');
+}
+
+function renderizarHistoricoPsicologia() {
+    const historico = JSON.parse(localStorage.getItem('prontuarioPsico') || '[]');
+    const container = document.getElementById('historicoPsico');
+    if(!container) return;
+    
+    container.innerHTML = '';
+    if (historico.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 italic">Nenhum atendimento registrado.</p>`;
+        return;
+    }
+
+    historico.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "p-3 border border-purple-100 rounded-lg bg-purple-50 text-xs space-y-1 shadow-sm";
+        card.innerHTML = `
+            <div class="flex justify-between font-bold text-purple-950">
+                <span>${item.aluno}</span>
+                <span class="text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded">${item.data}</span>
+            </div>
+            <div class="text-purple-700 font-semibold">${item.cat}</div>
+            <p class="text-slate-600">${item.texto}</p>
+        `;
+        container.appendChild(card);
+    });
+}
         // BASE DE DADOS INTEGRADA DA E.M.E.F. MARIA LUIZA
         const alunosEscola = {
             "5A": [
@@ -433,7 +528,49 @@
                 lista.appendChild(tr);
             });
         }
+<!-- MÓDULO PSICOLOGIA -->
+<section id="sec-psicologia" class="conteudo-aba hidden space-y-4">
+    <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl flex items-center justify-between text-purple-900">
+        <div>
+            <h3 class="font-bold text-sm">Módulo Confidencial - Psicologia Escolar</h3>
+            <p class="text-xs text-purple-700">Atendimento Responsável: Dra. Silva</p>
+        </div>
+        <span class="text-xs bg-purple-200 text-purple-800 px-3 py-1 rounded-full font-bold">Sigilo Profissional</span>
+    </div>
 
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Formulário de Registro -->
+        <div class="lg:col-span-1 space-y-4 lg:border-r lg:pr-6">
+            <h3 class="font-bold text-slate-800 text-sm">Novo Atendimento</h3>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Aluno(a)</label>
+                <select id="psicoAlunoSelect" class="w-full border rounded-lg p-2 text-sm bg-slate-50 border-slate-300"></select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Tipo de Acompanhamento</label>
+                <select id="psicoCategoria" class="w-full border rounded-lg p-2 text-sm bg-slate-50 border-slate-300">
+                    <option>Acompanhamento Comportamental</option>
+                    <option>Atendimento à Família</option>
+                    <option>Avaliação Psicopedagógica</option>
+                    <option>Encaminhamento Externo</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Parecer / Observações Confidenciais</label>
+                <textarea id="psicoTexto" rows="5" class="w-full border rounded-lg p-2 text-sm bg-slate-50 border-slate-300" placeholder="Anotações técnicas..."></textarea>
+            </div>
+            <button onclick="salvarProntuario()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 rounded-lg text-sm shadow">
+                Registrar Atendimento
+            </button>
+        </div>
+
+        <!-- Histórico -->
+        <div class="lg:col-span-2 space-y-4">
+            <h3 class="font-bold text-slate-800 text-sm">Histórico Prontuário</h3>
+            <div id="historicoPsico" class="space-y-3 max-h-[420px] overflow-y-auto pr-2"></div>
+        </div>
+    </div>
+</section>
         function salvarChamada() {
             alert('Frequência registrada com sucesso no sistema!');
         }
@@ -475,7 +612,23 @@
                 });
             });
         }
+<!-- Adicionar no Cabeçalho (RBAC) -->
+<div class="flex items-center bg-indigo-800 rounded-lg p-1.5 border border-indigo-700">
+    <label for="userRole" class="text-xs font-semibold mr-2 text-indigo-200">Perfil Ativo:</label>
+    <select id="userRole" onchange="alterarPerfil()" class="bg-indigo-950 text-white text-sm rounded px-2 py-1 outline-none border border-indigo-700">
+        <option value="direcao">Direção (Marcos / Rosangela)</option>
+        <option value="coordenacao">Coordenação (Cristinei / Celia)</option>
+        <option value="prof_patricia">Profa. Patrícia (5º A)</option>
+        <option value="prof_catia">Profa. Cátia (5º B)</option>
+        <option value="prof_cibelle">Profa. Cibelle (5º C)</option>
+        <option value="psicologia">Psicologia (Dra. Silva)</option>
+    </select>
+</div>
 
+<!-- Adicionar o Botão da Aba de Psicologia no seu Nav existente -->
+<button onclick="mudarAba('psicologia')" id="tab-psicologia" class="aba-btn hidden py-3 px-4 text-sm font-medium">
+    <i class="fa-solid fa-user-doctor mr-1"></i>Prontuário Psicológico
+</button>
         function salvarProntuario() {
             const aluno = document.getElementById('psicoAlunoSelect').value;
             const cat = document.getElementById('psicoCategoria').value;
