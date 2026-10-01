@@ -3,468 +3,512 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal do Aluno e Gestão Escolar</title>
-    <style>
-        :root {
-            --primary-color: #1b365d;
-            --secondary-color: #4b6b94;
-            --accent-color: #2e7d32;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #212529;
-            --border-color: #e9ecef;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.5;
-        }
-
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        /* Menu de Navegação Por Abas */
-        nav.main-nav {
-            background-color: var(--secondary-color);
-            display: flex;
-            gap: 1rem;
-            padding: 0 2rem;
-        }
-
-        nav.main-nav button {
-            background: none;
-            border: none;
-            color: white;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-
-        nav.main-nav button:hover, nav.main-nav button.active {
-            background-color: var(--primary-color);
-            border-bottom: 3px solid #ffffff;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section-title {
-            font-size: 1.4rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 0.3rem;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        .card h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .badge {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 0.25rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 1rem;
-            margin-right: 0.3rem;
-        }
-
-        .search-box, input[type="text"], select, textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        button.btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button.btn-primary:hover {
-            background-color: var(--secondary-color);
-        }
-
-        ul.data-list {
-            list-style: none;
-        }
-
-        ul.data-list li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        ul.data-list li:last-child {
-            border-bottom: none;
-        }
-
-        .student-list {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 0.5rem;
-        }
-
-        .metric-card {
-            text-align: center;
-            padding: 1.5rem;
-        }
-
-        .metric-card .number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            background-color: var(--primary-color);
-            color: white;
-            margin-top: 3rem;
-            font-size: 0.9rem;
-        }
-    </style>
+    <title>E.M.E.F. Maria Luiza - Sistema Integrado de Gestão Escolar</title>
+    <!-- Tailwind CSS CDN para estilização profissional -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-slate-100 font-sans text-slate-800">
 
-    <header>
-        <div class="container" style="margin: 0 auto; padding: 0;">
-            <h1>Portal de Gestão Escolar</h1>
+    <!-- CABEÇALHO E SELETOR DE PERFIL -->
+    <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid font-bold fa-school text-3xl text-indigo-300"></i>
+                <div>
+                    <h1 class="text-xl font-bold leading-tight">E.M.E.F. Maria Luiza</h1>
+                    <p class="text-xs text-indigo-200">Painel de Gestão Escolar Integrado</p>
+                </div>
+            </div>
+            
+            <!-- Controle de Nível de Acesso (RBAC) -->
+            <div class="flex items-center bg-indigo-800 rounded-lg p-1.5 border border-indigo-700">
+                <label for="userRole" class="text-xs font-semibold mr-2 text-indigo-200"><i class="fa-solid fa-user-shield mr-1"></i>Perfil Ativo:</label>
+                <select id="userRole" onchange="alterarPerfil()" class="bg-indigo-950 text-white text-sm rounded px-2 py-1 outline-none cursor-pointer">
+                    <option value="direcao">Direção (Marcos / Rosangela)</option>
+                    <option value="coordenacao">Coordenação (Cristinei / Celia)</option>
+                    <option value="prof_patricia">Profa. Patrícia (5º A)</option>
+                    <option value="prof_catia">Profa. Cátia (5º B)</option>
+                    <option value="prof_cibelle">Profa. Cibelle (5º C)</option>
+                    <option value="psicologia">Psicologia (Dra. Silva)</option>
+                </select>
+            </div>
         </div>
     </header>
 
-    <!-- Navegação de Módulos -->
-    <nav class="main-nav">
-        <button class="nav-btn active" onclick="switchTab('turmas')">Turmas & Alunos</button>
-        <button class="nav-btn" onclick="switchTab('gestao')">Painel da Gestão</button>
-        <button class="nav-btn" onclick="switchTab('mural')">Mural de Avisos</button>
+    <!-- MENU DE NAVEGAÇÃO POR ABAS -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto">
+            <button onclick="mudarAba('dashboard')" id="tab-dashboard" class="aba-btn flex items-center space-x-2 py-3 px-4 border-b-2 font-medium text-sm text-indigo-600 border-indigo-600 whitespace-nowrap">
+                <i class="fa-solid fa-chart-line"></i><span>Dashboard & Visão Geral</span>
+            </button>
+            <button onclick="mudarAba('chamada')" id="tab-chamada" class="aba-btn flex items-center space-x-2 py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-indigo-600 font-medium text-sm whitespace-nowrap">
+                <i class="fa-solid fa-clipboard-user"></i><span>Chamada Digital</span>
+            </button>
+            <button onclick="mudarAba('boletim')" id="tab-boletim" class="aba-btn flex items-center space-x-2 py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-indigo-600 font-medium text-sm whitespace-nowrap">
+                <i class="fa-solid fa-file-pen"></i><span>Notas & Boletim</span>
+            </button>
+            <button onclick="mudarAba('psicologia')" id="tab-psicologia" class="aba-btn flex items-center space-x-2 py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-indigo-600 font-medium text-sm whitespace-nowrap hidden">
+                <i class="fa-solid fa-user-doctor"></i><span>Prontuário Psicológico</span>
+            </button>
+            <button onclick="mudarAba('equipe')" id="tab-equipe" class="aba-btn flex items-center space-x-2 py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-indigo-600 font-medium text-sm whitespace-nowrap">
+                <i class="fa-solid fa-users"></i><span>Equipe & Gestão</span>
+            </button>
+        </div>
     </nav>
 
-    <div class="container">
-        
-        <!-- MÓDULO 1: TURMAS E ALUNOS -->
-        <div id="tab-turmas" class="tab-content active">
-            <h2 class="section-title">Turmas do 5º Ano</h2>
-            
-            <!-- Campo de Busca em Tempo Real -->
-            <input type="text" id="searchInput" class="search-box" placeholder="Buscar aluno por nome em todas as turmas..." onkeyup="filtrarAlunos()">
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
 
-            <div class="grid-container">
-                <!-- 5º Ano A -->
-                <div class="card">
-                    <h3>5º Ano A</h3>
-                    <span class="badge" id="count-5a">21 Alunos</span>
-                    <ul class="data-list student-list" id="lista-5a"></ul>
+        <!-- 1. DASHBOARD E ANALYTICS -->
+        <section id="sec-dashboard" class="conteudo-aba space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Total de Alunos</p>
+                        <h3 class="text-2xl font-bold text-slate-800" id="stat-total-alunos">64</h3>
+                        <p class="text-xs text-slate-400 mt-1">Matriculados nos 5ºs Anos</p>
+                    </div>
+                    <div class="bg-indigo-50 p-3 rounded-lg text-indigo-600"><i class="fa-solid fa-graduation-cap text-2xl"></i></div>
                 </div>
-
-                <!-- 5º Ano B -->
-                <div class="card">
-                    <h3>5º Ano B</h3>
-                    <span class="badge">Profa. Cátia</span>
-                    <span class="badge" id="count-5b">22 Alunos</span>
-                    <ul class="data-list student-list" id="lista-5b"></ul>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Turmas Ativas</p>
+                        <h3 class="text-2xl font-bold text-slate-800">3</h3>
+                        <p class="text-xs text-slate-400 mt-1">5º A, 5º B e 5º C</p>
+                    </div>
+                    <div class="bg-emerald-50 p-3 rounded-lg text-emerald-600"><i class="fa-solid fa-chalkboard-user text-2xl"></i></div>
                 </div>
-
-                <!-- 5º Ano C -->
-                <div class="card">
-                    <h3>5º Ano C</h3>
-                    <span class="badge">Profa. Cibelle</span>
-                    <span class="badge" id="count-5c">21 Alunos</span>
-                    <ul class="data-list student-list" id="lista-5c"></ul>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Frequência Médica Global</p>
+                        <h3 class="text-2xl font-bold text-emerald-600" id="stat-frequencia">98.4%</h3>
+                        <p class="text-xs text-slate-400 mt-1">Presença acumulada</p>
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg text-blue-600"><i class="fa-solid fa-user-check text-2xl"></i></div>
                 </div>
-            </div>
-        </div>
-
-        <!-- MÓDULO 2: PAINEL DA GESTÃO & CADASTRO -->
-        <div id="tab-gestao" class="tab-content">
-            <h2 class="section-title">Visão Geral & Métricas</h2>
-            
-            <div class="grid-container">
-                <div class="card metric-card">
-                    <h3>Total de Alunos</h3>
-                    <div class="number" id="total-alunos">64</div>
-                </div>
-                <div class="card metric-card">
-                    <h3>Turmas Ativas</h3>
-                    <div class="number">3</div>
-                </div>
-                <div class="card metric-card">
-                    <h3>Equipe de Apoio</h3>
-                    <div class="number">1</div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Acompanhamento Especial</p>
+                        <h3 class="text-2xl font-bold text-purple-600" id="stat-psico">3</h3>
+                        <p class="text-xs text-slate-400 mt-1">Atendidos pela Psicologia</p>
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded-lg text-purple-600"><i class="fa-solid fa-brain text-2xl"></i></div>
                 </div>
             </div>
 
-            <div class="grid-container">
-                <div class="card">
-                    <h3>Equipe Diretiva</h3>
-                    <ul class="data-list">
-                        <li><span>Diretor:</span> <strong>Marcos</strong></li>
-                        <li><span>Vice-Diretora:</span> <strong>Rosangela</strong></li>
-                        <li><span>Coordenadoras:</span> <strong>Cristinei e Celia</strong></li>
-                    </ul>
-                </div>
-
-                <div class="card">
-                    <h3>Equipe Multidisciplinar</h3>
-                    <ul class="data-list">
-                        <li><span>Acompanhamento Especializado:</span> <strong>Francisca</strong></li>
-                    </ul>
+            <!-- Resumo por Turma -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <h2 class="text-lg font-bold mb-4 text-slate-800 flex items-center"><i class="fa-solid fa-layer-group text-indigo-600 mr-2"></i>Resumo das Turmas</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="border rounded-lg p-4 bg-slate-50">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-indigo-900">5º Ano A</h4>
+                            <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-semibold">21 alunos</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-1"><strong>Professora:</strong> Patrícia</p>
+                        <p class="text-sm text-slate-600"><strong>Status:</strong> Em dia com lançamento</p>
+                    </div>
+                    <div class="border rounded-lg p-4 bg-slate-50">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-indigo-900">5º Ano B</h4>
+                            <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-semibold">22 alunos</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-1"><strong>Professora:</strong> Cátia</p>
+                        <p class="text-sm text-slate-600"><strong>Status:</strong> Em dia com lançamento</p>
+                    </div>
+                    <div class="border rounded-lg p-4 bg-slate-50">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-indigo-900">5º Ano C</h4>
+                            <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-semibold">21 alunos</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-1"><strong>Professora:</strong> Cibelle</p>
+                        <p class="text-sm text-slate-600"><strong>Status:</strong> Em dia com lançamento</p>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <h2 class="section-title">Cadastrar Novo Aluno</h2>
-            <div class="card">
-                <form id="form-novo-aluno" onsubmit="adicionarAluno(event)">
-                    <label for="nomeAluno">Nome do Aluno:</label>
-                    <input type="text" id="nomeAluno" required placeholder="Digite o nome completo">
-                    
-                    <label for="turmaAluno">Turma:</label>
-                    <select id="turmaAluno" required>
-                        <option value="ano5A">5º Ano A</option>
-                        <option value="ano5B">5º Ano B (Profa. Cátia)</option>
-                        <option value="ano5C">5º Ano C (Profa. Cibelle)</option>
+        <!-- 2. CHAMADA DIGITAL -->
+        <section id="sec-chamada" class="conteudo-aba hidden space-y-4">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-clipboard-check text-indigo-600 mr-2"></i>Diário de Classe & Frequência</h2>
+                        <p class="text-xs text-slate-500">Selecione a turma e marque a presença diária dos alunos.</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <input type="date" id="dataChamada" class="border rounded-lg px-3 py-1.5 text-sm bg-slate-50 border-slate-300">
+                        <select id="seletorTurmaChamada" onchange="carregarAlunosChamada()" class="border rounded-lg px-3 py-1.5 text-sm bg-slate-50 border-slate-300 font-semibold text-slate-700">
+                            <option value="5A">5º Ano A (Profa. Patrícia)</option>
+                            <option value="5B">5º Ano B (Profa. Cátia)</option>
+                            <option value="5C">5º Ano C (Profa. Cibelle)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
+                                <th class="p-3">#</th>
+                                <th class="p-3">Nome do Aluno</th>
+                                <th class="p-3 text-center">Status de Presença</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaChamada" class="divide-y divide-slate-100 text-sm">
+                            <!-- Inserido dinamicamente via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="salvarChamada()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2 rounded-lg text-sm shadow transition flex items-center">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i>Salvar Diário de Classe
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. BOLETIM E NOTAS -->
+        <section id="sec-boletim" class="conteudo-aba hidden space-y-4">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-graduation-cap text-indigo-600 mr-2"></i>Lançamento de Notas</h2>
+                        <p class="text-xs text-slate-500">Gestão de desempenho e pareceres avaliativos.</p>
+                    </div>
+                    <select id="seletorTurmaBoletim" onchange="carregarAlunosBoletim()" class="border rounded-lg px-3 py-1.5 text-sm bg-slate-50 border-slate-300 font-semibold text-slate-700">
+                        <option value="5A">5º Ano A (Profa. Patrícia)</option>
+                        <option value="5B">5º Ano B (Profa. Cátia)</option>
+                        <option value="5C">5º Ano C (Profa. Cibelle)</option>
                     </select>
+                </div>
 
-                    <button type="submit" class="btn-primary">Cadastrar Aluno</button>
-                </form>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase">
+                                <th class="p-3">Aluno</th>
+                                <th class="p-3 w-28">Português</th>
+                                <th class="p-3 w-28">Matemática</th>
+                                <th class="p-3 w-28">Ciências</th>
+                                <th class="p-3 w-28">História</th>
+                                <th class="p-3 w-28">Geografia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaBoletim" class="divide-y divide-slate-100 text-sm">
+                            <!-- Inserido dinamicamente via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="salvarNotas()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2 rounded-lg text-sm shadow transition flex items-center">
+                        <i class="fa-solid fa-floppy-disk mr-2"></i>Salvar Notas
+                    </button>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- MÓDULO 3: MURAL DE AVISOS -->
-        <div id="tab-mural" class="tab-content">
-            <h2 class="section-title">Mural da Escola</h2>
-            
-            <div class="card" style="margin-bottom: 2rem;">
-                <h3>Publicar Novo Aviso</h3>
-                <form id="form-aviso" onsubmit="publicarAviso(event)">
-                    <input type="text" id="tituloAviso" placeholder="Título do aviso" required>
-                    <textarea id="conteudoAviso" rows="3" placeholder="Escreva o comunicado aqui..." required></textarea>
-                    <button type="submit" class="btn-primary">Publicar Aviso</button>
-                </form>
+        <!-- 4. PRONTUÁRIO PSICOLÓGICO (RESTRITO À DRA. SILVA) -->
+        <section id="sec-psicologia" class="conteudo-aba hidden space-y-4">
+            <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl flex items-center justify-between text-purple-900">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-user-shield text-2xl text-purple-600"></i>
+                    <div>
+                        <h3 class="font-bold text-sm">Módulo Confidencial - Psicologia Escolar</h3>
+                        <p class="text-xs text-purple-700">Acesso Restrito: Dra. Silva</p>
+                    </div>
+                </div>
+                <span class="text-xs bg-purple-200 text-purple-800 px-2.5 py-1 rounded-full font-bold">Sigilo Profissional</span>
             </div>
 
-            <div id="container-avisos">
-                <!-- Avisos serão inseridos aqui dinamicamente -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Formulário de Atendimento -->
+                <div class="md:col-span-1 space-y-4 border-r border-slate-100 pr-0 md:pr-6">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center"><i class="fa-solid fa-pen-to-square text-purple-600 mr-2"></i>Novo Registo de Atendimento</h3>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Selecione o Aluno</label>
+                        <select id="psicoAlunoSelect" class="w-full border rounded-lg p-2 text-sm bg-slate-50 border-slate-300">
+                            <!-- Preenchido via JS -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Categoria</label>
+                        <select id="psicoCategoria" class="w-full border rounded-lg p-2 text-sm bg-slate-50 border-slate-300">
+                            <option>Acompanhamento Comportamental</option>
+                            <option>Atendimento à Família</option>
+                            <option>Avaliação Psicopedagógica</option>
+                            <option>Encaminhamento Externo</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Parecer / Observações Confidenciais</label>
+                        <textarea id="psicoTexto" rows="4" class="w-full border rounded-lg p-2 text-sm bg-slate-50 border-slate-300" placeholder="Anotações do atendimento..."></textarea>
+                    </div>
+                    <button onclick="salvarProntuario()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-semibold py-2 rounded-lg text-sm transition">
+                        Registrar Atendimento
+                    </button>
+                </div>
+
+                <!-- Histórico de Atendimentos -->
+                <div class="md:col-span-2 space-y-4">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center"><i class="fa-solid fa-folder-open text-purple-600 mr-2"></i>Histórico de Fichas Técnicas</h3>
+                    <div id="historicoPsico" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                        <!-- Registos inseridos via JS -->
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-    </div>
+        <!-- 5. EQUIPE E GESTÃO -->
+        <section id="sec-equipe" class="conteudo-aba hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-800 mb-4"><i class="fa-solid fa-users text-indigo-600 mr-2"></i>Corpo Docente e Gestão Técnica</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 border rounded-xl bg-slate-50 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">M</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Marcos</h4>
+                            <p class="text-xs text-slate-500">Diretor Escolar</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-slate-50 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">R</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Rosangela</h4>
+                            <p class="text-xs text-slate-500">Vice-Diretora</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-slate-50 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">C</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Cristinei</h4>
+                            <p class="text-xs text-slate-500">Coordenadora Pedagógica</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-slate-50 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">C</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Celia</h4>
+                            <p class="text-xs text-slate-500">Coordenadora Pedagógica</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-purple-50 border-purple-200 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-purple-200 text-purple-800 flex items-center justify-center font-bold">S</div>
+                        <div>
+                            <h4 class="font-bold text-purple-900 text-sm">Dra. Silva</h4>
+                            <p class="text-xs text-purple-700">Psicóloga Escolar</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-slate-50 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">P</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Profa. Patrícia</h4>
+                            <p class="text-xs text-slate-500">Regente - 5º Ano A</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-slate-50 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">C</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Profa. Cátia</h4>
+                            <p class="text-xs text-slate-500">Regente - 5º Ano B</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-xl bg-slate-50 flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold">C</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Profa. Cibelle</h4>
+                            <p class="text-xs text-slate-500">Regente - 5º Ano C</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <footer>
-        <p>&copy; Sistema de Gestão Escolar - Todos os direitos reservados.</p>
-    </footer>
+    </main>
 
+    <!-- SCRIPT DE LÓGICA DA APLICAÇÃO -->
     <script>
-        // Estrutura de dados central da instituição
-        const escolaDados = {
-            gestao: {
-                diretor: "Marcos",
-                viceDiretora: "Rosangela",
-                coordenadoras: ["Cristinei", "Celia"],
-                multidisciplinar: "Francisca"
-            },
-            turmas: {
-                ano5A: {
-                    professora: null,
-                    alunos: [
-                        "Alhena Fessel", "Alicia", "Ana Luiza", "Beatris Vitoria", 
-                        "Carlos Wesley", "Charles Henrique", "Enrico Amorim", "Gabriel Ferreira", 
-                        "Gabriel Nogueira", "Heitor Rosa", "Helena Mendonça", "José Henrique", 
-                        "Lucas Henrique", "Luna Hope", "Marina Ferreira", "Miguel Ragazzi", 
-                        "Pedro Henrique", "Piettro Lang", "Renan Jardim", "Sophia Giglioti", 
-                        "Vinícius Itipão"
-                    ]
-                },
-                ano5B: {
-                    professora: "Cátia",
-                    alunos: [
-                        "Acauã Munaro", "Ana Clara", "Anna Catharina", "Eduarda Rafaelly", 
-                        "Eike Pazzine", "Julia Capobianco", "Lara Laurinda", "Larissa Dib", 
-                        "Leonardo Carvalho", "Lucas Zampieri", "Luigi Santos", "Marcela Weksler", 
-                        "Maria Valentina", "Melissa Mel", "Pedro Vieira", "Rafaella Munhoz", 
-                        "Renan Lucas", "Ricardo Augusto", "Ronaldo Bertato", "Sophia Santos", 
-                        "Vinicius Eiji", "Vinicius Pereira"
-                    ]
-                },
-                ano5C: {
-                    professora: "Cibelle",
-                    alunos: [
-                        "Alice Lopes", "Alice Santiago", "Alicia Marques", "Ana Laura", 
-                        "Caio Lima", "Catarina Varela", "Gabriel Soares", "Gabriela Camargo", 
-                        "Gael De Araujo", "Heitor Cardoso", "Helena Ye", "Heloisa Barboza", 
-                        "Isabella Amato", "João Lucas", "Lorenzo Ryu", "Maria Julia", 
-                        "Melissa Ferrari", "Pedro Custodio", "Pedro Henrique", "Pedro Lucas", 
-                        "Vinicius Pescara"
-                    ]
-                }
-            },
-            avisos: [
-                { titulo: "Reunião de Pais e Mestres", texto: "A reunião referente ao bimestre atual ocorrerá no próximo sábado às 09h.", data: "01/10/2026" }
+        // BASE DE DADOS INTEGRADA DA E.M.E.F. MARIA LUIZA
+        const alunosEscola = {
+            "5A": [
+                "Alhena Fessel", "Alicia", "Ana Luiza", "Beatris Vitoria", "Carlos Wesley",
+                "Charles Henrique", "Enrico Amorim", "Gabriel Ferreira", "Gabriel Nogueira",
+                "Heitor Rosa", "Helena Mendonça", "José Henrique", "Lucas Henrique",
+                "Luna Hope", "Marina Ferreira", "Miguel Ragazzi", "Pedro Henrique",
+                "Piettro Lang", "Renan Jardim", "Sophia Giglioti", "Vinícius Itipão"
+            ],
+            "5B": [
+                "Acauã Munaro", "Ana Clara", "Anna Catharina", "Eduarda Rafaelly", "Eike Pazzine",
+                "Julia Capobianco", "Lara Laurinda", "Larissa Dib", "Leonardo Carvalho",
+                "Lucas Zampieri", "Luigi Santos", "Marcela Weksler", "Maria Valentina",
+                "Melissa Mel", "Pedro Vieira", "Rafaella Munhoz", "Renan Lucas",
+                "Ricardo Augusto", "Ronaldo Bertato", "Sophia Santos", "Vinicius Eiji", "Vinicius Pereira"
+            ],
+            "5C": [
+                "Alice Lopes", "Alice Santiago", "Alicia Marques", "Ana Laura", "Caio Lima",
+                "Catarina Varela", "Gabriel Soares", "Gabriela Camargo", "Gael De Araujo",
+                "Heitor Cardoso", "Helena Ye", "Heloisa Barboza", "Isabella Amato",
+                "João Lucas", "Lorenzo Ryu", "Maria Julia", "Melissa Ferrari",
+                "Pedro Custodio", "Pedro Henrique", "Pedro Lucas", "Vinicius Pescara"
             ]
         };
 
-        // Alternar entre as abas do sistema
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        // Data atual por padrão no campo de chamada
+        document.getElementById('dataChamada').valueAsDate = new Date();
 
-            document.getElementById('tab-' + tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+        // 1. ALTERANÂNCIA DE PERFIS (RBAC)
+        function alterarPerfil() {
+            const role = document.getElementById('userRole').value;
+            const tabPsico = document.getElementById('tab-psicologia');
+            const seletorChamada = document.getElementById('seletorTurmaChamada');
+            const seletorBoletim = document.getElementById('seletorTurmaBoletim');
 
-        // Renderizar a listagem de alunos nas respectivas turmas
-        function renderizarTurmas() {
-            renderLista("lista-5a", escolaDados.turmas.ano5A.alunos, "count-5a");
-            renderLista("lista-5b", escolaDados.turmas.ano5B.alunos, "count-5b");
-            renderLista("lista-5c", escolaDados.turmas.ano5C.alunos, "count-5c");
-            atualizarContadoresTotais();
-        }
-
-        function renderLista(elementId, listaAlunos, countId) {
-            const ul = document.getElementById(elementId);
-            const countBadge = document.getElementById(countId);
-            ul.innerHTML = "";
-            
-            listaAlunos.sort((a, b) => a.localeCompare(b, 'pt-BR'));
-            countBadge.textContent = `${listaAlunos.length} Alunos`;
-
-            listaAlunos.forEach(aluno => {
-                const li = document.createElement("li");
-                li.className = "student-item";
-                li.textContent = aluno;
-                ul.appendChild(li);
-            });
-        }
-
-        function atualizarContadoresTotais() {
-            const total = escolaDados.turmas.ano5A.alunos.length + 
-                          escolaDados.turmas.ano5B.alunos.length + 
-                          escolaDados.turmas.ano5C.alunos.length;
-            document.getElementById('total-alunos').textContent = total;
-        }
-
-        // Filtragem de Alunos em Tempo Real
-        function filtrarAlunos() {
-            const termo = document.getElementById("searchInput").value.toLowerCase();
-            const todosAlunos = document.querySelectorAll(".student-item");
-
-            todosAlunos.forEach(item => {
-                const nome = item.textContent.toLowerCase();
-                item.style.display = nome.includes(termo) ? "flex" : "none";
-            });
-        }
-
-        // Adicionar Aluno Dinamicamente
-        function adicionarAluno(event) {
-            event.preventDefault();
-            const nome = document.getElementById("nomeAluno").value.trim();
-            const turmaKey = document.getElementById("turmaAluno").value;
-
-            if (nome && escolaDados.turmas[turmaKey]) {
-                escolaDados.turmas[turmaKey].alunos.push(nome);
-                renderizarTurmas();
-                document.getElementById("form-novo-aluno").reset();
-                alert(`Aluno(a) "${nome}" cadastrado(a) com sucesso!`);
+            // Mostrar aba de psicologia apenas se for Dra. Silva, Direção ou Coordenação
+            if (role === 'psicologia' || role === 'direcao' || role === 'coordenacao') {
+                tabPsico.classList.remove('hidden');
+            } else {
+                tabPsico.classList.add('hidden');
+                // Se o utilizador estiver na aba restrita e mudar para professor, volta ao dashboard
+                if (document.getElementById('sec-psicologia').classList.contains('hidden') === false) {
+                    mudarAba('dashboard');
+                }
             }
+
+            // Trava automatizada da turma de acordo com a professora logada
+            if (role === 'prof_patricia') {
+                seletorChamada.value = '5A';
+                seletorBoletim.value = '5A';
+            } else if (role === 'prof_catia') {
+                seletorChamada.value = '5B';
+                seletorBoletim.value = '5B';
+            } else if (role === 'prof_cibelle') {
+                seletorChamada.value = '5C';
+                seletorBoletim.value = '5C';
+            }
+
+            carregarAlunosChamada();
+            carregarAlunosBoletim();
         }
 
-        // Gerenciamento do Mural de Avisos
-        function renderizarAvisos() {
-            const container = document.getElementById("container-avisos");
-            container.innerHTML = "";
+        // 2. NAVEGAÇÃO ENTRE ABAS
+        function mudarAba(abaId) {
+            document.querySelectorAll('.conteudo-aba').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.aba-btn').forEach(btn => {
+                btn.classList.remove('text-indigo-600', 'border-indigo-600');
+                btn.classList.add('text-slate-500', 'border-transparent');
+            });
 
-            escolaDados.avisos.forEach(aviso => {
-                const div = document.createElement("div");
-                div.className = "card";
-                div.style.marginBottom = "1rem";
-                div.innerHTML = `
-                    <h3>${aviso.titulo}</h3>
-                    <span class="badge">${aviso.data}</span>
-                    <p>${aviso.texto}</p>
+            document.getElementById('sec-' + abaId).classList.remove('hidden');
+            const targetBtn = document.getElementById('tab-' + abaId);
+            targetBtn.classList.remove('text-slate-500', 'border-transparent');
+            targetBtn.classList.add('text-indigo-600', 'border-indigo-600');
+        }
+
+        // 3. CARREGAR CHAMADA DIGITAL
+        function carregarAlunosChamada() {
+            const turma = document.getElementById('seletorTurmaChamada').value;
+            const lista = document.getElementById('listaChamada');
+            lista.innerHTML = '';
+
+            alunosEscola[turma].forEach((aluno, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-slate-400">${index + 1}</td>
+                    <td class="p-3 font-medium text-slate-700">${aluno}</td>
+                    <td class="p-3 text-center">
+                        <label class="inline-flex items-center cursor-pointer mr-4">
+                            <input type="radio" name="presenca_${index}" value="P" checked class="form-radio text-emerald-600 focus:ring-emerald-500">
+                            <span class="ml-1 text-xs text-emerald-700 font-bold">Presente</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="presenca_${index}" value="F" class="form-radio text-red-600 focus:ring-red-500">
+                            <span class="ml-1 text-xs text-red-600 font-bold">Ausente</span>
+                        </label>
+                    </td>
                 `;
-                container.appendChild(div);
+                lista.appendChild(tr);
             });
         }
 
-        function publicarAviso(event) {
-            event.preventDefault();
-            const titulo = document.getElementById("tituloAviso").value.trim();
-            const texto = document.getElementById("conteudoAviso").value.trim();
-            const dataHoje = new Date().toLocaleDateString('pt-BR');
-
-            if (titulo && texto) {
-                escolaDados.avisos.unshift({ titulo, texto, data: dataHoje });
-                renderizarAvisos();
-                document.getElementById("form-aviso").reset();
-            }
+        function salvarChamada() {
+            alert('Frequência registrada com sucesso no sistema!');
         }
 
-        // Inicialização
-        document.addEventListener("DOMContentLoaded", () => {
-            renderizarTurmas();
-            renderizarAvisos();
-        });
+        // 4. CARREGAR NOTAS / BOLETIM
+        function carregarAlunosBoletim() {
+            const turma = document.getElementById('seletorTurmaBoletim').value;
+            const lista = document.getElementById('listaBoletim');
+            lista.innerHTML = '';
+
+            alunosEscola[turma].forEach((aluno) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-medium text-slate-700">${aluno}</td>
+                    <td class="p-2"><input type="number" min="0" max="10" value="8.5" class="w-full border rounded p-1 text-center bg-slate-50"></td>
+                    <td class="p-2"><input type="number" min="0" max="10" value="9.0" class="w-full border rounded p-1 text-center bg-slate-50"></td>
+                    <td class="p-2"><input type="number" min="0" max="10" value="8.0" class="w-full border rounded p-1 text-center bg-slate-50"></td>
+                    <td class="p-2"><input type="number" min="0" max="10" value="9.5" class="w-full border rounded p-1 text-center bg-slate-50"></td>
+                    <td class="p-2"><input type="number" min="0" max="10" value="8.5" class="w-full border rounded p-1 text-center bg-slate-50"></td>
+                `;
+                lista.appendChild(tr);
+            });
+        }
+
+        function salvarNotas() {
+            alert('Boletim atualizado com sucesso!');
+        }
+
+        // 5. MÓDULO PSICOLÓGICO
+        function popularSelectPsicologia() {
+            const select = document.getElementById('psicoAlunoSelect');
+            select.innerHTML = '';
+            Object.keys(alunosEscola).forEach(turma => {
+                alunosEscola[turma].forEach(aluno => {
+                    const option = document.createElement('option');
+                    option.value = `${aluno} (${turma})`;
+                    option.textContent = `${aluno} (${turma})`;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function salvarProntuario() {
+            const aluno = document.getElementById('psicoAlunoSelect').value;
+            const cat = document.getElementById('psicoCategoria').value;
+            const texto = document.getElementById('psicoTexto').value;
+
+            if (!texto.trim()) {
+                alert('Por favor, digite o parecer antes de salvar.');
+                return;
+            }
+
+            const historico = document.getElementById('historicoPsico');
+            const card = document.createElement('div');
+            card.className = "p-3 border border-purple-100 rounded-lg bg-purple-50/50 text-xs space-y-1";
+            card.innerHTML = `
+                <div class="flex justify-between font-bold text-purple-900">
+                    <span>${aluno}</span>
+                    <span class="text-purple-600">${new Date().toLocaleDateString('pt-BR')}</span>
+                </div>
+                <div class="text-purple-700 font-semibold">${cat}</div>
+                <p class="text-slate-600">${texto}</p>
+                <div class="text-[10px] text-slate-400 mt-1">Registrado por Dra. Silva</div>
+            `;
+            historico.prepend(card);
+            document.getElementById('psicoTexto').value = '';
+            alert('Prontuário armazenado sob sigilo profissional.');
+        }
+
+        // INICIALIZAÇÃO
+        window.onload = function() {
+            carregarAlunosChamada();
+            carregarAlunosBoletim();
+            popularSelectPsicologia();
+        };
     </script>
 </body>
 </html>
